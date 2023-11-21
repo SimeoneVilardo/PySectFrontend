@@ -1,0 +1,40 @@
+---
+
+# Default compose file for development and production.
+# Should be used directly in development.
+# Automatically loads `docker-compose.override.yml` if it exists.
+# No extra steps required.
+# Should be used together with `docker/docker-compose.prod.yml`
+# in production.
+
+version: "3.6"
+services:
+
+  web:
+    image: "pysect-frontend:dev"
+    container_name: pysect-frontend-web
+    ports:
+      # We only bind ports directly in development:
+      - "9002:3000"
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      cache_from:
+        - "pysect-frontend:dev"
+        - "pysect-frontend:latest"
+        - "*"
+    networks:
+      - frontend-webnet
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    # This task is an example of how to extend existing ones:
+    #   some_worker:
+    #     <<: *web
+    #     command: python manage.py worker_process
+
+networks:
+  # Network for your internals, use it by default:
+  frontend-webnet:
+
+
