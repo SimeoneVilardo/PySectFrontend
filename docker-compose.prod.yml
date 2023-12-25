@@ -17,7 +17,7 @@ services:
       # We only bind ports directly in development:
       - "3000:3000"
     environment:
-      VIRTUAL_HOST: api.pysect.letz.dev
+      VIRTUAL_HOST: py.sect.letz.dev
       VIRTUAL_PATH: /
       VIRTUAL_PORT: 3000
     build:
