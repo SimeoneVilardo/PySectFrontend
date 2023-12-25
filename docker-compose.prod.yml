@@ -16,6 +16,10 @@ services:
     ports:
       # We only bind ports directly in development:
       - "3000:3000"
+    environment:
+      VIRTUAL_HOST: api.pysect.letz.dev
+      VIRTUAL_PATH: /
+      VIRTUAL_PORT: 3000
     build:
       context: .
       dockerfile: ./docker/Dockerfile
@@ -24,17 +28,8 @@ services:
         - "pysect-frontend:latest"
         - "*"
     networks:
-      - frontend-webnet
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
-
-    # This task is an example of how to extend existing ones:
-    #   some_worker:
-    #     <<: *web
-    #     command: python manage.py worker_process
+      - nginx-reverse-proxy-net
 
 networks:
-  # Network for your internals, use it by default:
-  frontend-webnet:
-
-
+  nginx-reverse-proxy-net:
+    external: true
