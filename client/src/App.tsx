@@ -1,35 +1,66 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import React, { useState, useEffect } from 'react';
 import './App.css'
+import './styles/card.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [challenges, setChallenges] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchChallenges = async () => {
+      try {
+        // Fetch data from your API or any other source
+        const response = await fetch('/api/challenge/');
+        const challengesJson = await response.json();
+
+        // Update state with the fetched data
+        setChallenges(challengesJson);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching items:', error);
+        setLoading(false);
+      }
+    };
+
+    // Call the fetchItems function when the component mounts
+    fetchChallenges();
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <div className="ag-format-container">
+      <div className="ag-courses_box">
+
+        {challenges.map((challenge) => (
+          <div className="ag-courses_item">
+            <a href="#" className="ag-courses-item_link">
+              <div className="ag-courses-item_bg"></div>
+
+              <div className="ag-courses-item_title">
+                {challenge.name}
+              </div>
+            </a>
+          </div>
+        ))}
+
+
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
-}
+
+  return (
+    <div>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <ul>
+          {challenges.map((challenge) => (
+            <li key={challenge.id}>{challenge.name}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
 
 export default App
