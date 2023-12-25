@@ -1,9 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css'
 import './styles/card.css'
 
+interface Challenge {
+  id: number;
+  name: string;
+  // other properties...
+}
+
 function App() {
-  const [challenges, setChallenges] = useState([]);
+  const [challenges, setChallenges] = useState<Challenge[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
