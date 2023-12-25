@@ -1,3 +1,5 @@
+import ChallengeSubmission from "./ChallengeSubmission";
+
 interface Challenge {
     id: number;
     name: string;
@@ -7,7 +9,7 @@ interface Challenge {
     output_sample: string;
     memory_limit: number;
     time_limit: number;
-    // other properties...
+    challenge_submissions: ChallengeSubmission[];
 }
 
 export default Challenge;

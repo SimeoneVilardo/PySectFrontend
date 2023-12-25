@@ -8,6 +8,23 @@ const ChallengeDetails = () => {
 
     const [challenge, setChallenge] = useState<Challenge | null>(null);
 
+    let get_challenge_submission_class = (status: string) => {
+        console.log(status);
+        if (status == "success") {
+            return "success";
+        }
+        if (status == "failure") {
+            return "failure";
+        }
+        if (status == "not_ready") {
+            return "not-ready";
+        }
+        if (status == "broken") {
+            return "broken";
+        }
+        return ""
+    }
+
     useEffect(() => {
         const fetchChallenge = async () => {
             try {
@@ -22,13 +39,22 @@ const ChallengeDetails = () => {
         fetchChallenge();
     }, [challengeId]);
 
+
     return (
-        <ol style={{ "--length": "5" } as any} role="list">
-            <li style={{ "--i": "5" } as any}>
-                <h3>Receiving your benefit</h3>
-                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Adipiscing diam donec adipiscing tristique risus.</p>
-            </li>
-        </ol>
+        <>
+            <h1>{challenge?.name}</h1>
+            <h3>{challenge?.description}</h3>
+            <strong>Challenge Submissions</strong>
+            <ol>
+                {challenge?.challenge_submissions.map((challenge_submission) => (
+                    <li key={challenge_submission.id} className={get_challenge_submission_class(challenge_submission.status)}>
+                        <strong>{challenge_submission.creation_date}</strong>
+                        <p>STATUS: {challenge_submission.status}</p>
+                        {challenge_submission.status === 'failure' && <p>ERROR: {challenge_submission.error}</p>}
+                    </li>
+                ))}
+            </ol>
+        </>
     )
 }
 
