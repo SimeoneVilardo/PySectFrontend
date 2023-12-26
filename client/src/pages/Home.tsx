@@ -1,10 +1,15 @@
 import { useState, useEffect } from 'react';
 import Challenge from '../models/Challenge';
-import '../styles/card.css'
+import '../styles/home.css'
 import { Link } from 'react-router-dom';
 
 const Home = () => {
     const [challenges, setChallenges] = useState<Challenge[]>([]);
+
+    useEffect(() => {
+        console.log("set body class");
+        document.body.setAttribute('class', 'home-body');
+    }, []);
 
     useEffect(() => {
         const fetchChallenges = async () => {
@@ -25,7 +30,7 @@ const Home = () => {
     }, []);
 
     return (
-        <>
+        <div className="home-container">
             <h1>Challenges</h1>
             <div className="ag-format-container">
                 <div className="ag-courses_box">
@@ -47,7 +52,7 @@ const Home = () => {
 
                 </div>
             </div>
-        </>
+        </div>
     )
 }
 

@@ -1,5 +1,15 @@
+/* .home-body {} */
+
+.home-container {
+    padding-top: 80px;
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+/*START CARD*/
+
 .ag-format-container {
-    width: 1142px;
+    min-width: 700px;
     margin: 0 auto;
 }
 
@@ -96,3 +106,5 @@
     -o-transition: all .5s ease;
     transition: all .5s ease;
 }
+
+/*END CARD*/
