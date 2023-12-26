@@ -171,24 +171,14 @@ const ChallengeDetails = () => {
     let renderAlertMap = { "running": runningAlert, "broken": inactiveAlert, "not_ready": warningAlert, "failure": dangerAlert, "success": successAlert, "ready": infoAlert }
     let statusMap = { "running": "running", "broken": "inactive", "not_ready": "warning", "failure": "danger", "success": "success", "ready": "info" }
 
-
-
-
     return (
         <div className="challenge-details-container">
             <h1 className="challenge-details-title">Challenge Submissions</h1>
-
-            {challenge?.challenge_submissions.map((challengeSubmission) => (
+            {challenge?.challenge_submissions.sort((a, b) => new Date(b.creation_date).getTime() - new Date(a.creation_date).getTime()).map((challengeSubmission) => (
                 <div key={challengeSubmission.id} className={`${statusMap[challengeSubmission.status]} alert`}>
                     {renderAlertMap[challengeSubmission.status](challengeSubmission)}
                 </div>
             ))}
-
-
-
-
-
-
 
         </div>
     )
