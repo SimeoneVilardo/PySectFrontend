@@ -1,0 +1,66 @@
+.challenge-detail-line {
+    padding: 4px;
+}
+
+.challenge-presentation-card {
+    position: relative;
+    margin: 2rem auto;
+    padding: 2rem 1rem 1rem;
+    box-shadow: 0.1rem 0.1rem 1.5rem rgba(0, 0, 0, 0.3);
+    border-radius: 0.25rem;
+    overflow: hidden;
+    background-color: white;
+}
+
+.challenge-presentation-card::before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 1rem;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: linear-gradient(to right, #cd3e94, #e17fad);
+}
+
+.challenge-presentation-card h3 {
+    display: flex;
+    align-items: baseline;
+    margin: 0 0 1rem;
+    color: rgb(70 70 70);
+}
+
+.challenge-presentation-number {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 auto;
+    margin-right: 1rem;
+    width: 3rem;
+    /* Modifica la larghezza del cerchio */
+    height: 3rem;
+    /* Modifica l'altezza del cerchio */
+    padding: 1rem;
+    border-radius: 50%;
+    background-color: #cd3e94;
+    color: white;
+}
+
+@media (min-width: 40em) {
+    .challenge-presentation-card {
+        flex-grow: 2;
+        margin-left: 10px;
+        margin-right: 20px;
+        margin-top: 0px;
+        padding: 3rem 2rem 2rem;
+    }
+
+    .challenge-presentation-card h3 {
+        font-size: 2.25rem;
+        margin: 0 0 2rem;
+    }
+
+    .challenge-presentation-number {
+        margin-right: 1.5rem;
+    }
+}
