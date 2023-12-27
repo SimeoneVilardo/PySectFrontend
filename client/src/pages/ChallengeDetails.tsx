@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone'
 import Challenge from '../models/Challenge';
 import '../styles/challenge_details.css'
@@ -23,7 +23,7 @@ const ChallengeDetails = () => {
     formData.append('file', acceptedFile);
     const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken'));
     const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
-    const response = await fetch(`/api/challenge-submission/${challengeId}/`, {
+    await fetch(`/api/challenge-submission/${challengeId}/`, {
       method: 'POST', body: formData, headers: {
         'X-CSRFToken': csrfToken
       }
