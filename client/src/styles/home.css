@@ -93,7 +93,6 @@
 .ag-courses-item_bg {
     height: 128px;
     width: 128px;
-    background-color: #cd3e94;
 
     z-index: 1;
     position: absolute;
@@ -105,6 +104,14 @@
     -webkit-transition: all .5s ease;
     -o-transition: all .5s ease;
     transition: all .5s ease;
+}
+
+.ag-courses-item_bg-completed {
+    background-color: #228b22;
+}
+
+.ag-courses-item_bg-uncompleted {
+    background-color: #cd3e94;
 }
 
 /*END CARD*/

@@ -221,16 +221,19 @@ const ChallengeDetails = () => {
               {challenge?.output_sample}
             </pre>
           </code>
-          <div className='challenge-upload-container'>
-            <div {...getRootProps()}>
-              <input {...getInputProps()} />
-              {
-                isDragActive ?
-                  <p>Drop the files here ...</p> :
-                  <p>Drag 'n' drop some files here, or click to select files</p>
-              }
+          {challenge?.challenge_submissions.some(submission => submission.status === 'success')
+            ? <p>Challenge completed</p>
+            : <div className='challenge-upload-container'>
+              <div {...getRootProps()}>
+                <input {...getInputProps()} />
+                {
+                  isDragActive ?
+                    <p>Drop the files here ...</p> :
+                    <p>Drag 'n' drop some files here, or click to select files</p>
+                }
+              </div>
             </div>
-          </div>
+          }
         </div>
         <div className='alerts'>
           {challenge?.challenge_submissions.sort((a, b) => new Date(b.creation_date).getTime() - new Date(a.creation_date).getTime()).map((challengeSubmission) => (

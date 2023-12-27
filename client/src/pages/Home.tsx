@@ -4,7 +4,8 @@ import '../styles/home.css'
 import { Link } from 'react-router-dom';
 
 const Home = () => {
-    const [challenges, setChallenges] = useState<Challenge[]>([]);
+    const [completedChallenges, setCompletedChallenges] = useState<Challenge[]>([]);
+    const [uncompletedChallenges, setUncompletedChallenges] = useState<Challenge[]>([]);
 
     useEffect(() => {
         console.log("set body class");
@@ -17,9 +18,14 @@ const Home = () => {
                 // Fetch data from your API or any other source
                 const response = await fetch('/api/challenge/');
                 const challengesJson = await response.json();
-
-                // Update state with the fetched data
-                setChallenges(challengesJson);
+                const completedChallengesJson = challengesJson.filter((challenge: Challenge) =>
+                    challenge.challenge_submissions.some(submission => submission.status === 'success')
+                );
+                const uncompletedChallengesJson = challengesJson.filter((challenge: Challenge) =>
+                    challenge.challenge_submissions.every(submission => submission.status !== 'success')
+                );
+                setCompletedChallenges(completedChallengesJson);
+                setUncompletedChallenges(uncompletedChallengesJson);
             } catch (error) {
                 console.error('Error fetching items:', error);
             }
@@ -34,22 +40,30 @@ const Home = () => {
             <h1>Challenges</h1>
             <div className="ag-format-container">
                 <div className="ag-courses_box">
-
-                    {challenges.map((challenge) => (
+                    {uncompletedChallenges.map((challenge) => (
                         <div key={challenge.id} className="ag-courses_item">
                             <Link to={`/challenge/${challenge.id}`} className="ag-courses-item_link">
-                                <div className="ag-courses-item_bg"></div>
-
+                                <div className="ag-courses-item_bg ag-courses-item_bg-uncompleted"></div>
                                 <div className="ag-courses-item_title">
                                     {challenge.name}
                                 </div>
                             </Link>
-
-
                         </div>
                     ))}
-
-
+                </div>
+            </div>
+            <div className="ag-format-container">
+                <div className="ag-courses_box">
+                    {completedChallenges.map((challenge) => (
+                        <div key={challenge.id} className="ag-courses_item">
+                            <Link to={`/challenge/${challenge.id}`} className="ag-courses-item_link">
+                                <div className="ag-courses-item_bg ag-courses-item_bg-completed"></div>
+                                <div className="ag-courses-item_title">
+                                    {challenge.name}
+                                </div>
+                            </Link>
+                        </div>
+                    ))}
                 </div>
             </div>
         </div>
