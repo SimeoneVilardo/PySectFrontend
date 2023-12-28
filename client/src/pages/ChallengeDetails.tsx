@@ -23,8 +23,10 @@ const ChallengeDetails = () => {
     formData.append('file', acceptedFile);
     const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken'));
     const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
+    const token = localStorage.getItem('token');
     await fetch(`/api/challenge-submission/${challengeId}/`, {
       method: 'POST', body: formData, headers: {
+        'Authorization': `Bearer ${token}`,
         'X-CSRFToken': csrfToken
       }
     });
@@ -34,7 +36,12 @@ const ChallengeDetails = () => {
   useEffect(() => {
     const fetchChallenge = async () => {
       try {
-        const response = await fetch(`/api/challenge/${challengeId}`);
+        const token = localStorage.getItem('token');
+        const response = await fetch(`/api/challenge/${challengeId}`, {
+          method: 'GET', headers: {
+            'Authorization': `Bearer ${token}`,
+          }
+        });
         const challengeJson = await response.json();
         setChallenge(challengeJson);
         console.log(challengeJson);
@@ -64,10 +71,12 @@ const ChallengeDetails = () => {
     try {
       const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken'));
       const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
+      const token = localStorage.getItem('token');
       const response = await fetch(`/api/challenge-submission/${challengeSubmission.id}/run/`, {
         method: 'PATCH', headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': csrfToken
+          'X-CSRFToken': csrfToken,
+          'Authorization': `Bearer ${token}`,
         }
       });
       console.log(response);
