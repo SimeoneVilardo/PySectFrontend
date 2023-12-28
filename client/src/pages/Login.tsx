@@ -21,6 +21,7 @@ const Login = () => {
 
         const data = await response.json();
         localStorage.setItem('token', data.token);
+        location.replace("/");
     }
 
     return (
