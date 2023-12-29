@@ -17,7 +17,7 @@ const Home = () => {
             try {
                 // Fetch data from your API or any other source
                 const token = localStorage.getItem('token');
-                const response = await fetch('/api/challenge/', {
+                const response = await fetch('/api/challenges/', {
                     method: 'GET', headers: {
                         'Authorization': `Bearer ${token}`,
                     }
