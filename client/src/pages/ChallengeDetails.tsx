@@ -37,7 +37,7 @@ const ChallengeDetails = () => {
     const fetchChallenge = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`/api/challenge/${challengeId}`, {
+        const response = await fetch(`/api/challenges/${challengeId}`, {
           method: 'GET', headers: {
             'Authorization': `Bearer ${token}`,
           }
