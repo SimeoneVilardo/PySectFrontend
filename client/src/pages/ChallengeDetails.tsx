@@ -34,6 +34,20 @@ const ChallengeDetails = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
   useEffect(() => {
+    // opening a connection to the server to begin receiving events from it
+    const token = localStorage.getItem('token');
+    const eventSource = new EventSource(`/api/challenge-submission/status/?token=${token}`);
+
+    // attaching a handler to receive message events
+    eventSource.onmessage = (event) => {
+      console.log(event.data);
+    };
+
+    // terminating the connection on component unmount
+    return () => eventSource.close();
+  }, []);
+
+  useEffect(() => {
     const fetchChallenge = async () => {
       try {
         const token = localStorage.getItem('token');
