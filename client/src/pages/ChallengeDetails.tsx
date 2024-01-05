@@ -36,11 +36,18 @@ const ChallengeDetails = () => {
   useEffect(() => {
     // opening a connection to the server to begin receiving events from it
     const token = localStorage.getItem('token');
-    const eventSource = new EventSource(`/api/challenge-submission/status/?token=${token}`);
+    const eventSource = new EventSource(`/api/notification/challenge-submission-update/?token=${token}`);
 
     // attaching a handler to receive message events
-    eventSource.onmessage = (event) => {
+    eventSource.onmessage = async (event) => {
       console.log(event.data);
+      const challengeSubmissionStatusResponse = await fetch(`/api/challenge-submission/${event.data}/status/`, {
+        method: 'GET', headers: {
+          'Authorization': `Bearer ${token}`,
+        }
+      });
+      const challengeSubmissionStatus = await challengeSubmissionStatusResponse.json();
+      console.log(challengeSubmissionStatus)
     };
 
     // terminating the connection on component unmount
