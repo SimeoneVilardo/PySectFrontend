@@ -30,6 +30,23 @@ const ChallengeDetails = () => {
     });
   }
 
+  const updateSubmissionStatus = (submissionId: number, newStatus: 'running' | 'broken' | 'not_ready' | 'ready' | 'success' | 'failure') => {
+    setChallenge(prevChallenge => {
+      if (prevChallenge) {
+        return {
+          ...prevChallenge,
+          challenge_submissions: prevChallenge.challenge_submissions.map(submission =>
+            submission.id === submissionId
+              ? { ...submission, status: newStatus }
+              : submission
+          )
+        };
+      } else {
+        return prevChallenge;
+      }
+    });
+  }
+
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const acceptedFile: File = acceptedFiles[0];
     const formData = new FormData();
@@ -62,7 +79,8 @@ const ChallengeDetails = () => {
         }
       });
       const challengeSubmissionStatus = await challengeSubmissionStatusResponse.json();
-      console.log(challengeSubmissionStatus)
+      console.log(challengeSubmissionStatus);
+      updateSubmissionStatus(challengeSubmissionStatus.id, challengeSubmissionStatus.status);
     };
 
     // terminating the connection on component unmount
