@@ -126,14 +126,15 @@ const ChallengeDetails = () => {
       const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken'));
       const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
       const token = localStorage.getItem('token');
-      const response = await fetch(`/api/challenge-submission/${challengeSubmission.id}/run/`, {
+      const runChallengeSubmissionResponse = await fetch(`/api/challenge-submission/${challengeSubmission.id}/run/`, {
         method: 'PATCH', headers: {
           'Content-Type': 'application/json',
           'X-CSRFToken': csrfToken,
           'Authorization': `Bearer ${token}`,
         }
       });
-      console.log(response);
+      const runChallengeSubmission = await runChallengeSubmissionResponse.json();
+      updateSubmissionStatus(runChallengeSubmission.id, runChallengeSubmission.status);
     } catch (error) {
       console.error('Error fetching item:', error);
     }
