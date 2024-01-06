@@ -30,14 +30,14 @@ const ChallengeDetails = () => {
     });
   }
 
-  const updateSubmissionStatus = (submissionId: number, newStatus: 'running' | 'broken' | 'not_ready' | 'ready' | 'success' | 'failure') => {
+  const updateSubmission = (updatedSubmission: ChallengeSubmission) => {
     setChallenge(prevChallenge => {
       if (prevChallenge) {
         return {
           ...prevChallenge,
           challenge_submissions: prevChallenge.challenge_submissions.map(submission =>
-            submission.id === submissionId
-              ? { ...submission, status: newStatus }
+            submission.id === updatedSubmission.id
+              ? updatedSubmission
               : submission
           )
         };
@@ -70,12 +70,12 @@ const ChallengeDetails = () => {
     // attaching a handler to receive message events
     eventSource.onmessage = async (event) => {
       console.log(event.data);
-      const challengeSubmissionStatusResponse = await fetch(`/api/challenge-submission/${event.data}/status/`, {
+      const challengeSubmissionResponse = await fetch(`/api/challenge-submission/${event.data}/`, {
         method: 'GET'
       });
-      const challengeSubmissionStatus = await challengeSubmissionStatusResponse.json();
-      console.log(challengeSubmissionStatus);
-      updateSubmissionStatus(challengeSubmissionStatus.id, challengeSubmissionStatus.status);
+      const updatedChallengeSubmission = await challengeSubmissionResponse.json();
+      console.log(updatedChallengeSubmission);
+      updateSubmission(updatedChallengeSubmission);
     };
 
     // terminating the connection on component unmount
@@ -122,7 +122,7 @@ const ChallengeDetails = () => {
         }
       });
       const runChallengeSubmission = await runChallengeSubmissionResponse.json();
-      updateSubmissionStatus(runChallengeSubmission.id, runChallengeSubmission.status);
+      updateSubmission(runChallengeSubmission);
     } catch (error) {
       console.error('Error fetching item:', error);
     }
