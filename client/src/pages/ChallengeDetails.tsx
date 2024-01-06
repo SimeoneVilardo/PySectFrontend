@@ -17,6 +17,19 @@ const ChallengeDetails = () => {
 
   const [challenge, setChallenge] = useState<Challenge | null>(null);
 
+  const addSubmission = (newSubmission: ChallengeSubmission) => {
+    setChallenge(prevChallenge => {
+      if (prevChallenge) {
+        return {
+          ...prevChallenge,
+          challenge_submissions: [...prevChallenge.challenge_submissions, newSubmission]
+        };
+      } else {
+        return prevChallenge;
+      }
+    });
+  }
+
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     const acceptedFile: File = acceptedFiles[0];
     const formData = new FormData();
@@ -24,12 +37,14 @@ const ChallengeDetails = () => {
     const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken'));
     const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
     const token = localStorage.getItem('token');
-    await fetch(`/api/challenge-submission/${challengeId}/`, {
+    const newChallengeSubmissionResponse = await fetch(`/api/challenge-submission/${challengeId}/`, {
       method: 'POST', body: formData, headers: {
         'Authorization': `Bearer ${token}`,
         'X-CSRFToken': csrfToken
       }
     });
+    const newChallengeSubmission = await newChallengeSubmissionResponse.json();
+    addSubmission(newChallengeSubmission);
   }, [])
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
