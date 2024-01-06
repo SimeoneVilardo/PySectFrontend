@@ -53,10 +53,8 @@ const ChallengeDetails = () => {
     formData.append('file', acceptedFile);
     const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken'));
     const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
-    const token = localStorage.getItem('token');
     const newChallengeSubmissionResponse = await fetch(`/api/challenge-submission/${challengeId}/`, {
       method: 'POST', body: formData, headers: {
-        'Authorization': `Bearer ${token}`,
         'X-CSRFToken': csrfToken
       }
     });
@@ -67,16 +65,13 @@ const ChallengeDetails = () => {
 
   useEffect(() => {
     // opening a connection to the server to begin receiving events from it
-    const token = localStorage.getItem('token');
-    const eventSource = new EventSource(`/api/notification/challenge-submission-update/?token=${token}`);
+    const eventSource = new EventSource('/api/notification/challenge-submission-update');
 
     // attaching a handler to receive message events
     eventSource.onmessage = async (event) => {
       console.log(event.data);
       const challengeSubmissionStatusResponse = await fetch(`/api/challenge-submission/${event.data}/status/`, {
-        method: 'GET', headers: {
-          'Authorization': `Bearer ${token}`,
-        }
+        method: 'GET'
       });
       const challengeSubmissionStatus = await challengeSubmissionStatusResponse.json();
       console.log(challengeSubmissionStatus);
@@ -90,12 +85,7 @@ const ChallengeDetails = () => {
   useEffect(() => {
     const fetchChallenge = async () => {
       try {
-        const token = localStorage.getItem('token');
-        const response = await fetch(`/api/challenges/${challengeId}`, {
-          method: 'GET', headers: {
-            'Authorization': `Bearer ${token}`,
-          }
-        });
+        const response = await fetch(`/api/challenges/${challengeId}`, { method: 'GET' });
         const challengeJson = await response.json();
         setChallenge(challengeJson);
         console.log(challengeJson);
@@ -125,12 +115,10 @@ const ChallengeDetails = () => {
     try {
       const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken'));
       const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
-      const token = localStorage.getItem('token');
       const runChallengeSubmissionResponse = await fetch(`/api/challenge-submission/${challengeSubmission.id}/run/`, {
         method: 'PATCH', headers: {
           'Content-Type': 'application/json',
           'X-CSRFToken': csrfToken,
-          'Authorization': `Bearer ${token}`,
         }
       });
       const runChallengeSubmission = await runChallengeSubmissionResponse.json();

@@ -16,12 +16,7 @@ const Home = () => {
         const fetchChallenges = async () => {
             try {
                 // Fetch data from your API or any other source
-                const token = localStorage.getItem('token');
-                const response = await fetch('/api/challenges/', {
-                    method: 'GET', headers: {
-                        'Authorization': `Bearer ${token}`,
-                    }
-                });
+                const response = await fetch('/api/challenges/', { method: 'GET' });
                 const challengesJson = await response.json();
                 const completedChallengesJson = challengesJson.filter((challenge: Challenge) =>
                     challenge.challenge_submissions.some(submission => submission.status === 'success')
