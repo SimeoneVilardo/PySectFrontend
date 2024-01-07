@@ -1,9 +1,17 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { useNavigate } from "react-router-dom";
 import '../styles/login.css'
+import { AuthContext } from '../App';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const navigate = useNavigate();
+    const authContext = useContext(AuthContext);
+    if (!authContext) {
+        throw new Error("AuthContext is undefined");
+    }
+    const { setUser } = authContext;
 
     useEffect(() => {
         console.log("set body class");
@@ -11,17 +19,21 @@ const Login = () => {
     }, []);
 
     const handleLogin = async () => {
-        const response = await fetch('/api/login/', {
+        const loginResponse = await fetch('/api/login/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({ username, password })
         });
-
-        const data = await response.json();
-        localStorage.setItem('token', data.token);
-        location.replace("/");
+        if (!loginResponse.ok) {
+            console.log("Invalid credentials");
+            return;
+        }
+        const userResponse = await fetch('/api/me/', { method: 'GET' });
+        const userJson = await userResponse.json();
+        setUser(userJson);
+        navigate("/");
     }
 
     return (

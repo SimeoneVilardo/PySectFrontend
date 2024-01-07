@@ -16,8 +16,12 @@ const Home = () => {
         const fetchChallenges = async () => {
             try {
                 // Fetch data from your API or any other source
-                const response = await fetch('/api/challenges/', { method: 'GET' });
-                const challengesJson = await response.json();
+                const challengesResponse = await fetch('/api/challenges/', { method: 'GET' });
+                if (!challengesResponse.ok) {
+                    console.log("Error fetching challenges");
+                    return;
+                }
+                const challengesJson = await challengesResponse.json();
                 const completedChallengesJson = challengesJson.filter((challenge: Challenge) =>
                     challenge.challenge_submissions.some(submission => submission.status === 'success')
                 );
@@ -27,7 +31,7 @@ const Home = () => {
                 setCompletedChallenges(completedChallengesJson);
                 setUncompletedChallenges(uncompletedChallengesJson);
             } catch (error) {
-                console.error('Error fetching items:', error);
+                console.error('Error fetching challenges:', error);
             }
         };
 
