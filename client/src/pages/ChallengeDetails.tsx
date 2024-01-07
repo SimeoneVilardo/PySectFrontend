@@ -140,7 +140,10 @@ const ChallengeDetails = () => {
       inputSampleJson = JSON.parse(inputSample);
     }
     catch (e) {
-      return "<ERROR>";
+      return "<ERROR: invalid JSON>";
+    }
+    if (!Array.isArray(inputSampleJson)) {
+      return "<ERROR: Not an array>";
     }
     let result = "";
     inputSampleJson.forEach((innerArr: string[]) => {
@@ -276,46 +279,44 @@ const ChallengeDetails = () => {
 
   return (
     <div className="challenge-details-container">
-      <div style={{ "display": "flex", "justifyContent": "space-between" }}>
-        <div className="challenge-presentation-card">
-          <h3>{challenge?.name}</h3>
-          <p className='challenge-detail-line'><strong>Description:</strong> {challenge?.description}</p>
-          <p className='challenge-detail-line'><strong>Time limit:</strong> {challenge?.time_limit}</p>
-          <p className='challenge-detail-line'><strong>Memory limit:</strong> {challenge?.memory_limit}</p>
-          <p className='challenge-detail-line'><strong>Points:</strong> {challenge?.points}</p>
-          <p className='challenge-detail-line'><strong>Input sample:</strong></p>
-          <code>
-            <pre>
-              {parseInputSample(challenge?.input_sample)}
-            </pre>
-          </code>
-          <p className='challenge-detail-line'><strong>Output sample:</strong></p>
-          <code>
-            <pre>
-              {challenge?.output_sample}
-            </pre>
-          </code>
-          {challenge?.challenge_submissions.some(submission => submission.status === 'success')
-            ? <p>Challenge completed</p>
-            : <div className='challenge-upload-container'>
-              <div {...getRootProps()}>
-                <input {...getInputProps()} />
-                {
-                  isDragActive ?
-                    <p>Drop the files here ...</p> :
-                    <p>Drag 'n' drop some files here, or click to select files</p>
-                }
-              </div>
+      <div className="challenge-presentation-card">
+        <h1>{challenge?.name}</h1>
+        <p className='challenge-detail-line'><strong>Description:</strong> {challenge?.description}</p>
+        <p className='challenge-detail-line'><strong>Time limit:</strong> {challenge?.time_limit}</p>
+        <p className='challenge-detail-line'><strong>Memory limit:</strong> {challenge?.memory_limit}</p>
+        <p className='challenge-detail-line'><strong>Points:</strong> {challenge?.points}</p>
+        <p className='challenge-detail-line'><strong>Input sample:</strong></p>
+        <code>
+          <pre>
+            {parseInputSample(challenge?.input_sample)}
+          </pre>
+        </code>
+        <p className='challenge-detail-line'><strong>Output sample:</strong></p>
+        <code>
+          <pre>
+            {challenge?.output_sample}
+          </pre>
+        </code>
+        {challenge?.challenge_submissions.some(submission => submission.status === 'success')
+          ? <p>Challenge completed</p>
+          : <div className='challenge-upload-container'>
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+              {
+                isDragActive ?
+                  <p>Drop the files here ...</p> :
+                  <p>Drag 'n' drop some files here, or click to select files</p>
+              }
             </div>
-          }
-        </div>
-        <div className='alerts'>
-          {challenge?.challenge_submissions.sort((a, b) => new Date(b.creation_date).getTime() - new Date(a.creation_date).getTime()).map((challengeSubmission) => (
-            <div key={challengeSubmission.id} className={`${statusMap[challengeSubmission.status]} alert`}>
-              {renderAlertMap[challengeSubmission.status](challengeSubmission)}
-            </div>
-          ))}
-        </div>
+          </div>
+        }
+      </div>
+      <div className='alerts'>
+        {challenge?.challenge_submissions.sort((a, b) => new Date(b.creation_date).getTime() - new Date(a.creation_date).getTime()).map((challengeSubmission) => (
+          <div key={challengeSubmission.id} className={`${statusMap[challengeSubmission.status]} alert`}>
+            {renderAlertMap[challengeSubmission.status](challengeSubmission)}
+          </div>
+        ))}
       </div>
     </div>
   )

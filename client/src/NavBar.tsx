@@ -24,10 +24,7 @@ function Navbar() {
         <nav>
             <div className="wrapper">
                 <div className="logo"><Link to="/">PySect</Link></div>
-                <input type="radio" name="slider" id="menu-btn" />
-                <input type="radio" name="slider" id="close-btn" />
                 <ul className="nav-links">
-                    <label htmlFor="close-btn" className="btn close-btn"><i className="fas fa-times"></i></label>
                     <li><a href="#">Settings</a></li>
                     {!user
                         ? <li><Link to="Login">Login</Link></li>

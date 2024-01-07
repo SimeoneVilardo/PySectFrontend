@@ -57,35 +57,34 @@ const Home = () => {
 
     return (
         <div className="home-container">
-            <h1>Challenges</h1>
-            <div className="ag-format-container">
-                <div className="ag-courses_box">
-                    {uncompletedChallenges.map((challenge) => (
-                        <div key={challenge.id} className="ag-courses_item">
-                            <Link to={`/challenge/${challenge.id}`} className="ag-courses-item_link">
-                                <div className="ag-courses-item_bg ag-courses-item_bg-uncompleted"></div>
-                                <div className="ag-courses-item_title">
-                                    {challenge.name}
-                                </div>
-                            </Link>
-                        </div>
-                    ))}
-                </div>
+            <h1>New Challenges</h1>
+            <div className="ag-courses_box">
+                {uncompletedChallenges.map((challenge) => (
+                    <div key={challenge.id} className="ag-courses_item">
+                        <Link to={`/challenge/${challenge.id}`} className="ag-courses-item_link">
+                            <div className="ag-courses-item_bg ag-courses-item_bg-uncompleted"></div>
+                            <div className="ag-courses-item_title">
+                                {challenge.name}
+                            </div>
+                        </Link>
+                    </div>
+                ))}
             </div>
-            <div className="ag-format-container">
-                <div className="ag-courses_box">
-                    {completedChallenges.map((challenge) => (
-                        <div key={challenge.id} className="ag-courses_item">
-                            <Link to={`/challenge/${challenge.id}`} className="ag-courses-item_link">
-                                <div className="ag-courses-item_bg ag-courses-item_bg-completed"></div>
-                                <div className="ag-courses-item_title">
-                                    {challenge.name}
-                                </div>
-                            </Link>
-                        </div>
-                    ))}
-                </div>
+
+            <h1>Completed Challenges</h1>
+            <div className="ag-courses_box">
+                {completedChallenges.map((challenge) => (
+                    <div key={challenge.id} className="ag-courses_item">
+                        <Link to={`/challenge/${challenge.id}`} className="ag-courses-item_link">
+                            <div className="ag-courses-item_bg ag-courses-item_bg-completed"></div>
+                            <div className="ag-courses-item_title">
+                                {challenge.name}
+                            </div>
+                        </Link>
+                    </div>
+                ))}
             </div>
+
         </div>
     )
 }
