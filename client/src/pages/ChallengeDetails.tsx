@@ -66,7 +66,13 @@ const ChallengeDetails = () => {
       }
     });
     if (!newChallengeSubmissionResponse.ok) {
-      toast.error("Error uploading file", { theme: "colored", position: "bottom-center" });
+      if (newChallengeSubmissionResponse.status >= 400 && newChallengeSubmissionResponse.status < 500) {
+        const newChallengeSubmissionError = await newChallengeSubmissionResponse.json();
+        toast.error(newChallengeSubmissionError.error, { theme: "colored", position: "bottom-center" });
+      }
+      else {
+        toast.error("Error uploading file", { theme: "colored", position: "bottom-center" });
+      }
       setUploading(false);
       return;
     }
