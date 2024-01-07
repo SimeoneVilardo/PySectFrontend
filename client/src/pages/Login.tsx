@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from 'react';
+import { useEffect, useState, useContext, FormEvent } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../styles/login.css'
 import { AuthContext } from '../App';
@@ -20,7 +20,8 @@ const Login = () => {
         document.body.setAttribute('class', 'login-body');
     }, []);
 
-    const handleLogin = async () => {
+    const handleLogin = async (event: FormEvent) => {
+        event.preventDefault(); // Prevent form from causing a page refresh
         setLoading(true);
         const loginResponse = await fetch('/api/login/', {
             method: 'POST',
@@ -62,11 +63,11 @@ const Login = () => {
                         <p>Please enter your credentials to login.</p>
                     </div>
                 </div>
-                <div className="login-form">
+                <form className="login-form" onSubmit={handleLogin}>
                     <input type="text" placeholder="username" onChange={e => setUsername(e.target.value)} />
                     <input type="password" placeholder="password" onChange={e => setPassword(e.target.value)} />
-                    <button onClick={handleLogin}>login</button>
-                </div>
+                    <button type="submit">login</button>
+                </form>
             </div>
         </div>
     )
