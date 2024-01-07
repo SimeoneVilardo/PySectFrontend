@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import '../styles/login.css'
 import { AuthContext } from '../App';
 import Spinner from '../components/Spinner';
+import { toast } from 'react-toastify';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -31,8 +32,8 @@ const Login = () => {
             body: JSON.stringify({ username, password })
         });
         if (!loginResponse.ok) {
-            console.log("Invalid credentials");
             setLoading(false);
+            toast.error("Invalid credentials", { theme: "colored", position: "bottom-center" });
             return;
         }
         const userResponse = await fetch('/api/me/', { method: 'GET' });

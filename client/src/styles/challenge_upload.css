@@ -165,7 +165,35 @@
 }
 
 .challenge-upload-container {
-    background-color: burlywood;
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #333;
+    background: rgba(0, 0, 0, 0.7);
+    align-self: center;
+}
+
+.challenge-upload-container-completed {
+    padding: 15px;
+    border: 1px solid #333;
+    background: rgba(0, 0, 0, 0.7);
+    align-self: center;
+}
+
+.challenge-upload-inner {
+    border: 2px dashed #bbb;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 50px;
+    text-align: center;
+    font: 21pt bold arial;
+    color: #bbb;
+}
+
+.challenge-upload-inner-completed {
+    border: 2px solid #bbb;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    padding: 50px;
+    text-align: center;
+    font: 21pt bold arial;
+    color: #bbb;
 }

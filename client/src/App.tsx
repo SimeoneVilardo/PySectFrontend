@@ -11,6 +11,8 @@ import User from './models/User';
 import PrivateRoutes from './pages/PrivateRoutes';
 import PublicRoutes from './pages/PublicRoutes';
 import Spinner from './components/Spinner';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -55,6 +57,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>
+      <ToastContainer />
     </AuthContext.Provider>
 
   )

@@ -7,9 +7,12 @@ import '../styles/challenge_upload.css'
 import "../styles/challenge_presentation.css"
 import ChallengeSubmission from '../models/ChallengeSubmission';
 import Spinner from '../components/Spinner';
+import { toast } from 'react-toastify';
+import { Oval } from 'react-loader-spinner';
 
 const ChallengeDetails = () => {
   let { challengeId } = useParams();
+
 
   useEffect(() => {
     console.log("set body class");
@@ -17,6 +20,7 @@ const ChallengeDetails = () => {
   }, []);
 
   const [loading, setLoading] = useState(true);
+  const [uploading, setUploading] = useState(false);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
 
   const addSubmission = (newSubmission: ChallengeSubmission) => {
@@ -50,6 +54,7 @@ const ChallengeDetails = () => {
   }
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    setUploading(true);
     const acceptedFile: File = acceptedFiles[0];
     const formData = new FormData();
     formData.append('file', acceptedFile);
@@ -60,8 +65,15 @@ const ChallengeDetails = () => {
         'X-CSRFToken': csrfToken
       }
     });
+    if (!newChallengeSubmissionResponse.ok) {
+      toast.error("Error uploading file", { theme: "colored", position: "bottom-center" });
+      setUploading(false);
+      return;
+    }
     const newChallengeSubmission = await newChallengeSubmissionResponse.json();
     addSubmission(newChallengeSubmission);
+    setUploading(false);
+    //toast.success("File uploaded successfully", { theme: "colored", position: "bottom-center" });
   }, [])
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
@@ -288,10 +300,21 @@ const ChallengeDetails = () => {
             {challenge?.output_sample}
           </pre>
         </code>
-        {challenge?.challenge_submissions.some(submission => submission.status === 'success')
-          ? <p>Challenge completed</p>
-          : <div className='challenge-upload-container'>
-            <div {...getRootProps()}>
+        {uploading ? (
+          <Oval
+            visible={true}
+            height="80"
+            width="80"
+            color="#cd3e94"
+            secondaryColor='#e17fad'
+            ariaLabel="oval-loading"
+            wrapperStyle={{ alignSelf: "center" }}
+            wrapperClass=""
+          />
+        ) : (
+          !challenge?.challenge_submissions.some(submission => submission.status === 'success') &&
+          <div className='challenge-upload-container'>
+            <div {...getRootProps()} className='challenge-upload-inner'>
               <input {...getInputProps()} />
               {
                 isDragActive ?
@@ -300,7 +323,7 @@ const ChallengeDetails = () => {
               }
             </div>
           </div>
-        }
+        )}
       </div>
       <div className='alerts'>
         {challenge?.challenge_submissions.sort((a, b) => new Date(b.creation_date).getTime() - new Date(a.creation_date).getTime()).map((challengeSubmission) => (
