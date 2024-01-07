@@ -2,7 +2,7 @@ import { useEffect, useState, useContext, FormEvent } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../styles/login.css'
 import { AuthContext } from '../App';
-import { Oval } from 'react-loader-spinner';
+import Spinner from '../components/Spinner';
 
 const Login = () => {
     const [username, setUsername] = useState('');
@@ -42,16 +42,7 @@ const Login = () => {
     }
 
     if (loading) {
-        return (<Oval
-            visible={true}
-            height="80"
-            width="80"
-            color="#cd3e94"
-            secondaryColor='#e17fad'
-            ariaLabel="oval-loading"
-            wrapperStyle={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
-            wrapperClass=""
-        />)
+        return (<Spinner />)
     }
 
     return (

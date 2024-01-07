@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom'
 import { lazy, Suspense, useEffect, useState } from 'react';
-import Navbar from './NavBar';
+import Navbar from './components/NavBar';
 const Home = lazy(() => import('./pages/Home'))
 const Login = lazy(() => import('./pages/Login'))
 const ChallengeDetails = lazy(() => import('./pages/ChallengeDetails'))
@@ -10,7 +10,7 @@ import AuthContextType from './contexts/AuthContextType';
 import User from './models/User';
 import PrivateRoutes from './pages/PrivateRoutes';
 import PublicRoutes from './pages/PublicRoutes';
-import { Oval } from 'react-loader-spinner';
+import Spinner from './components/Spinner';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -37,16 +37,7 @@ function App() {
   }, [])
 
   if (loading) {
-    return (<Oval
-      visible={true}
-      height="80"
-      width="80"
-      color="#cd3e94"
-      secondaryColor='#e17fad'
-      ariaLabel="oval-loading"
-      wrapperStyle={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
-      wrapperClass=""
-    />)
+    return (<Spinner />)
   }
 
   return (

@@ -6,7 +6,7 @@ import '../styles/challenge_details.css'
 import '../styles/challenge_upload.css'
 import "../styles/challenge_presentation.css"
 import ChallengeSubmission from '../models/ChallengeSubmission';
-import { Oval } from 'react-loader-spinner';
+import Spinner from '../components/Spinner';
 
 const ChallengeDetails = () => {
   let { challengeId } = useParams();
@@ -265,16 +265,7 @@ const ChallengeDetails = () => {
   let statusMap = { "running": "running", "broken": "inactive", "not_ready": "warning", "failure": "danger", "success": "success", "ready": "info" }
 
   if (loading) {
-    return (<Oval
-      visible={true}
-      height="80"
-      width="80"
-      color="#cd3e94"
-      secondaryColor='#e17fad'
-      ariaLabel="oval-loading"
-      wrapperStyle={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
-      wrapperClass=""
-    />)
+    return (<Spinner />)
   }
 
   return (

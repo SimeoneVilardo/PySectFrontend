@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Challenge from '../models/Challenge';
 import '../styles/home.css'
 import { Link } from 'react-router-dom';
-import { Oval } from 'react-loader-spinner';
+import Spinner from '../components/Spinner';
 
 const Home = () => {
     const [completedChallenges, setCompletedChallenges] = useState<Challenge[]>([]);
@@ -43,16 +43,7 @@ const Home = () => {
     }, []);
 
     if (loading) {
-        return (<Oval
-            visible={true}
-            height="80"
-            width="80"
-            color="#cd3e94"
-            secondaryColor='#e17fad'
-            ariaLabel="oval-loading"
-            wrapperStyle={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
-            wrapperClass=""
-        />)
+        return (<Spinner />)
     }
 
     return (
