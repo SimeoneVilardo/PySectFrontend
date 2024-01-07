@@ -9,6 +9,7 @@ import { createContext } from 'react';
 import AuthContextType from './contexts/AuthContextType';
 import User from './models/User';
 import PrivateRoutes from './pages/PrivateRoutes';
+import PublicRoutes from './pages/PublicRoutes';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -35,7 +36,9 @@ function App() {
       <Navbar />
       <Suspense fallback={<div className="container">Loading...</div>}>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route element={<PublicRoutes />}>
+            <Route path="/login" element={<Login />} />
+          </Route>
           <Route element={<PrivateRoutes />}>
             <Route path="/" element={<Home />} />
             <Route path="/challenge/:challengeId" element={<ChallengeDetails />} />
