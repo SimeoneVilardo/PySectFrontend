@@ -6,6 +6,7 @@ import '../styles/challenge_details.css'
 import '../styles/challenge_upload.css'
 import "../styles/challenge_presentation.css"
 import ChallengeSubmission from '../models/ChallengeSubmission';
+import { Oval } from 'react-loader-spinner';
 
 const ChallengeDetails = () => {
   let { challengeId } = useParams();
@@ -15,6 +16,7 @@ const ChallengeDetails = () => {
     document.body.setAttribute('class', 'challenge-details-body');
   }, []);
 
+  const [loading, setLoading] = useState(true);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
 
   const addSubmission = (newSubmission: ChallengeSubmission) => {
@@ -92,6 +94,7 @@ const ChallengeDetails = () => {
       } catch (error) {
         console.error('Error fetching item:', error);
       }
+      setLoading(false);
     };
     fetchChallenge();
   }, [challengeId]);
@@ -251,6 +254,19 @@ const ChallengeDetails = () => {
 
   let renderAlertMap = { "running": runningAlert, "broken": inactiveAlert, "not_ready": warningAlert, "failure": dangerAlert, "success": successAlert, "ready": infoAlert }
   let statusMap = { "running": "running", "broken": "inactive", "not_ready": "warning", "failure": "danger", "success": "success", "ready": "info" }
+
+  if (loading) {
+    return (<Oval
+      visible={true}
+      height="80"
+      width="80"
+      color="#cd3e94"
+      secondaryColor='#e17fad'
+      ariaLabel="oval-loading"
+      wrapperStyle={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
+      wrapperClass=""
+    />)
+  }
 
   return (
     <div className="challenge-details-container">

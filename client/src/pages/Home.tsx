@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react';
 import Challenge from '../models/Challenge';
 import '../styles/home.css'
 import { Link } from 'react-router-dom';
+import { Oval } from 'react-loader-spinner';
 
 const Home = () => {
     const [completedChallenges, setCompletedChallenges] = useState<Challenge[]>([]);
     const [uncompletedChallenges, setUncompletedChallenges] = useState<Challenge[]>([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         console.log("set body class");
@@ -33,11 +35,25 @@ const Home = () => {
             } catch (error) {
                 console.error('Error fetching challenges:', error);
             }
+            setLoading(false);
         };
 
         // Call the fetchItems function when the component mounts
         fetchChallenges();
     }, []);
+
+    if (loading) {
+        return (<Oval
+            visible={true}
+            height="80"
+            width="80"
+            color="#cd3e94"
+            secondaryColor='#e17fad'
+            ariaLabel="oval-loading"
+            wrapperStyle={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
+            wrapperClass=""
+        />)
+    }
 
     return (
         <div className="home-container">

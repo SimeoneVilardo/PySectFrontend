@@ -2,10 +2,12 @@ import { useEffect, useState, useContext } from 'react';
 import { useNavigate } from "react-router-dom";
 import '../styles/login.css'
 import { AuthContext } from '../App';
+import { Oval } from 'react-loader-spinner';
 
 const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const authContext = useContext(AuthContext);
     if (!authContext) {
@@ -19,6 +21,7 @@ const Login = () => {
     }, []);
 
     const handleLogin = async () => {
+        setLoading(true);
         const loginResponse = await fetch('/api/login/', {
             method: 'POST',
             headers: {
@@ -28,12 +31,26 @@ const Login = () => {
         });
         if (!loginResponse.ok) {
             console.log("Invalid credentials");
+            setLoading(false);
             return;
         }
         const userResponse = await fetch('/api/me/', { method: 'GET' });
         const userJson = await userResponse.json();
         setUser(userJson);
         navigate("/");
+    }
+
+    if (loading) {
+        return (<Oval
+            visible={true}
+            height="80"
+            width="80"
+            color="#cd3e94"
+            secondaryColor='#e17fad'
+            ariaLabel="oval-loading"
+            wrapperStyle={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
+            wrapperClass=""
+        />)
     }
 
     return (
