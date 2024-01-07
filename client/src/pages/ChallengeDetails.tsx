@@ -135,7 +135,13 @@ const ChallengeDetails = () => {
     if (!inputSample) {
       return "";
     }
-    let inputSampleJson = JSON.parse(inputSample);
+    let inputSampleJson = null
+    try {
+      inputSampleJson = JSON.parse(inputSample);
+    }
+    catch (e) {
+      return "<ERROR>";
+    }
     let result = "";
     inputSampleJson.forEach((innerArr: string[]) => {
       result += innerArr.join('\n') + '\n\n';
