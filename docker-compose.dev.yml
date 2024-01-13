@@ -1,21 +1,9 @@
----
-
-# Default compose file for development and production.
-# Should be used directly in development.
-# Automatically loads `docker-compose.override.yml` if it exists.
-# No extra steps required.
-# Should be used together with `docker/docker-compose.prod.yml`
-# in production.
-
 version: "3.9"
 services:
 
-  web:
-    image: "pysect-frontend:dev"
-    container_name: pysect-dev-frontend
-    ports:
-      # We only bind ports directly in development:
-      - "3000:3000"
+  web-dev:
+    image: "pysect-frontend-dev"
+    container_name: pysect-frontend-dev
     environment:
       VIRTUAL_HOST: py.sect.test.letz.dev
       VIRTUAL_PATH: /
@@ -23,10 +11,6 @@ services:
     build:
       context: .
       dockerfile: ./docker/Dockerfile
-      cache_from:
-        - "pysect-frontend:dev"
-        - "pysect-frontend:latest"
-        - "*"
     networks:
       - nginx-reverse-proxy-net
 
