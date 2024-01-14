@@ -288,24 +288,40 @@ const ChallengeDetails = () => {
 
   return (
     <div className="challenge-details-container">
-      <div className="challenge-presentation-card">
-        <h1>{challenge?.name}</h1>
-        <p className='challenge-detail-line'><strong>Description:</strong> {challenge?.description}</p>
-        <p className='challenge-detail-line'><strong>Time limit:</strong> {challenge?.time_limit}</p>
-        <p className='challenge-detail-line'><strong>Memory limit:</strong> {challenge?.memory_limit}</p>
-        <p className='challenge-detail-line'><strong>Points:</strong> {challenge?.points}</p>
-        <p className='challenge-detail-line'><strong>Input sample:</strong></p>
-        <code>
-          <pre>
-            {parseInputSample(challenge?.input_sample)}
-          </pre>
-        </code>
-        <p className='challenge-detail-line'><strong>Output sample:</strong></p>
-        <code>
-          <pre>
-            {challenge?.output_sample}
-          </pre>
-        </code>
+      <div className="challenge-card">
+        <div className="header">
+          <h1>{challenge?.name}</h1>
+          <p className="description">{challenge?.description}</p>
+        </div>
+        <hr className="divider" />
+        <div className="section">
+          <div className="section-title">
+            <i className="fas fa-code"></i>
+            <h2>Input Sample</h2>
+          </div>
+          <pre className="code">{parseInputSample(challenge?.input_sample)} wfweof weofkweopfk efkoweopfk opkfweokfweop fkwefjerieru bvherb vehjrbv hjsdb vjsebvsdbmverjb erjbv ermjb</pre>
+        </div>
+        <hr className="divider" />
+        <div className="section">
+          <div className="section-title">
+            <i className="fas fa-terminal"></i>
+            <h2>Output Sample</h2>
+          </div>
+          <pre className="code">{challenge?.output_sample}</pre>
+        </div>
+        <hr className="divider" />
+        <div className="section">
+          <div className="section-title">
+            <i className="far fa-clock"></i>
+            <p>Time Limit: {challenge?.time_limit} {(challenge?.time_limit && challenge?.time_limit > 1) ? "seconds" : "second"}</p>
+          </div>
+        </div>
+        <div className="section">
+          <div className="section-title">
+            <i className="fas fa-memory"></i>
+            <p>Memory Limit: {challenge?.memory_limit} MB</p>
+          </div>
+        </div>
         {uploading ? (
           <Oval
             visible={true}
@@ -324,8 +340,8 @@ const ChallengeDetails = () => {
               <input {...getInputProps()} />
               {
                 isDragActive ?
-                  <p>Drop the files here ...</p> :
-                  <p>Drag 'n' drop some files here, or click to select files</p>
+                  <p>Drop the file here ...</p> :
+                  <p>Drag 'n' drop your Python file here, or click to open selector</p>
               }
             </div>
           </div>
