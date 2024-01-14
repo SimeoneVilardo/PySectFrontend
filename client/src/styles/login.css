@@ -9,8 +9,8 @@ header a img {
 }
 
 .login-page {
+    padding-top: 80px;
     width: 360px;
-    padding: 8% 0 0;
     margin: auto;
 }
 
