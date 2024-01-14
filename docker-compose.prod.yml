@@ -1,9 +1,9 @@
 version: "3.9"
 services:
 
-  web-prd:
-    image: "pysect-frontend-prd"
-    container_name: pysect-frontend-prd
+  web-prod:
+    image: "pysect-frontend-prod"
+    container_name: pysect-frontend-prod
     environment:
       VIRTUAL_HOST: py.sect.letz.dev
       VIRTUAL_PATH: /
