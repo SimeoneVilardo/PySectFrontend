@@ -299,7 +299,7 @@ const ChallengeDetails = () => {
             <i className="fas fa-code"></i>
             <h2>Input Sample</h2>
           </div>
-          <pre className="code">{parseInputSample(challenge?.input_sample)} wfweof weofkweopfk efkoweopfk opkfweokfweop fkwefjerieru bvherb vehjrbv hjsdb vjsebvsdbmverjb erjbv ermjb</pre>
+          <pre className="code">{parseInputSample(challenge?.input_sample)}</pre>
         </div>
         <hr className="divider" />
         <div className="section">
