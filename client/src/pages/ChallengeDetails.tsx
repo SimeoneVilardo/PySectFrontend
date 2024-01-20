@@ -22,7 +22,7 @@ const ChallengeDetails = () => {
       try {
         const challengeResponse = await fetch(`/api/challenges/${challengeId}`, { method: 'GET' });
         const challengeJson = await challengeResponse.json();
-        const submissionsResponse = await fetch(`/api/challenge-submission/${challengeId}/`, { method: 'GET' });
+        const submissionsResponse = await fetch(`/api/challenge-submission?sort=-creation_date`, { method: 'GET' });
         const submissionsJson = await submissionsResponse.json();
         setChallenge(challengeJson);
         setChallengeSubmissions(submissionsJson);
