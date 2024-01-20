@@ -16,7 +16,8 @@
     "react-loader-spinner": "^6.1.6",
     "react-router-dom": "^6.21.1",
     "react-toastify": "^9.1.3",
-    "serve": "^14.2.1"
+    "serve": "^14.2.1",
+    "theme-change": "^2.5.0"
   },
   "devDependencies": {
     "@tailwindcss/typography": "github:tailwindcss/typography",

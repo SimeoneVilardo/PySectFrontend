@@ -61,7 +61,7 @@ const ChallengeSubmissionStatus = ({ submission }: ChallengeSubmissionProps) => 
     }
 
     if (!currentSubmission?.id) {
-        return;
+        return <></>;
     }
     return (
 
@@ -75,7 +75,7 @@ const ChallengeSubmissionStatus = ({ submission }: ChallengeSubmissionProps) => 
                 </div>
             </div>
             <div className="flex flex-row gap-2 content-center">
-                <button className="btn btn-sm w-20" onClick={runChallengeSubmission}>Run</button>
+                {currentSubmission.status === "ready" ? <button className="btn btn-sm w-20" onClick={runChallengeSubmission}>Run</button> : null}
                 <button className="btn btn-sm w-20" onClick={downloadPythonFile}>Source</button>
             </div>
         </div>

@@ -4,11 +4,13 @@ import ChallengeSubmissionStatus from "../components/ChallengeSubmissionStatus"
 import Challenge from "../models/Challenge";
 import { useEffect, useRef, useState } from "react";
 import ChallengeSubmission from "../models/ChallengeSubmission";
+import LoadingButton from "../components/LoadingButton";
 
 
 const ChallengeDetails = () => {
   let { challengeId } = useParams();
 
+  const [isUploading, setUploading] = useState<boolean>(false);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -49,6 +51,7 @@ const ChallengeDetails = () => {
 
 
   const uploadSubmissionFile = async (submissionFile: File) => {
+    setUploading(true);
     const formData = new FormData();
     formData.append('file', submissionFile);
     const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken'));
@@ -67,11 +70,12 @@ const ChallengeDetails = () => {
       else {
         //toast.error("Error uploading file", { theme: "colored", position: "bottom-center" });
       }
-      //setUploading(false);
+      setUploading(false);
       return;
     }
     const newChallengeSubmission = await newChallengeSubmissionResponse.json();
     addSubmission(newChallengeSubmission);
+    setUploading(false);
   }
 
   const renderSubmissions = () => {
@@ -97,7 +101,7 @@ const ChallengeDetails = () => {
         <div className="lg:w-1/2">
           <div className="flex lg:flex-row flex-col gap-2">
             <input type="file" ref={fileInput} className="file-input file-input-bordered file-input-lg w-full" />
-            <button className="btn btn-outline btn-primary btn-lg" onClick={handleUpload}>Upload</button>
+            <LoadingButton isLoading={isUploading} className="btn btn-outline btn-primary btn-lg" onClick={handleUpload}>Upload</LoadingButton>
           </div>
           {renderSubmissions()}
         </div>

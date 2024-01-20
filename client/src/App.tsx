@@ -7,40 +7,40 @@ const ChallengeDetails = lazy(() => import('./pages/ChallengeDetails'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 import { createContext } from 'react';
 import AuthContextType from './contexts/AuthContextType';
+import { themeChange } from 'theme-change'
 import User from './models/User';
 import PrivateRoutes from './pages/PrivateRoutes';
 import PublicRoutes from './pages/PublicRoutes';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Spinner from './components/Spinner';
 
 export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    themeChange(false)
+  }, [])
 
   useEffect(() => {
     const checkLoginState = async () => {
       const userResponse = await fetch('/api/me/', { method: 'GET' });
       if (!userResponse.ok) {
-        setLoading(false);
         return;
       }
       const userJson = await userResponse.json();
       setUser(userJson);
-      setLoading(false);
     };
 
     checkLoginState();
   }, [])
-  if (loading) {
-    return (<></>)
-  }
 
   return (
     <AuthContext.Provider value={{ user, setUser }}>
       <Navbar />
-      <Suspense fallback={<div className="container">Loading...</div>}>
+      <Suspense fallback={<Spinner className="text-primary size-24"></Spinner>}>
         <Routes>
           <Route element={<PublicRoutes />}>
             <Route path="/login" element={<Login />} />

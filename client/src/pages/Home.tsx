@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import ChallengeHomeCard from "../components/ChallengeHomeCard"
 import Challenge from "../models/Challenge";
+import Spinner from "../components/Spinner";
 
 const Home = () => {
 
+    const [isLoading, setLoading] = useState<boolean>(true);
     const [completedChallenges, setCompletedChallenges] = useState<Challenge[]>([]);
     const [uncompletedChallenges, setUncompletedChallenges] = useState<Challenge[]>([]);
 
@@ -37,12 +39,17 @@ const Home = () => {
             } catch (error) {
                 console.error('Error fetching challenges:', error);
             }
-            //setLoading(false);
+            setLoading(false);
         };
 
         // Call the fetchItems function when the component mounts
         fetchChallenges();
     }, []);
+
+    if (isLoading) {
+        return (<Spinner className="text-primary size-24"></Spinner>)
+    }
+
 
     return (
         <>
