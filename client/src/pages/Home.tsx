@@ -6,14 +6,13 @@ import Spinner from "../components/Spinner";
 const Home = () => {
 
     const [isLoading, setLoading] = useState<boolean>(true);
-    const [completedChallenges, setCompletedChallenges] = useState<Challenge[]>([]);
-    const [uncompletedChallenges, setUncompletedChallenges] = useState<Challenge[]>([]);
+    const [challenges, setChallenges] = useState<Challenge[]>([]);
 
-    const renderCompletedChallenges = completedChallenges.map(c =>
+    const renderCompletedChallenges = challenges.filter((challenge: Challenge) => challenge.is_completed).map(c =>
         <ChallengeHomeCard key={c.id} challenge={c}></ChallengeHomeCard>
     );
 
-    const renderUncompletedChallenges = uncompletedChallenges.map(c =>
+    const renderUncompletedChallenges = challenges.filter((challenge: Challenge) => !challenge.is_completed).map(c =>
         <ChallengeHomeCard key={c.id} challenge={c}></ChallengeHomeCard>
     );
 
@@ -27,15 +26,8 @@ const Home = () => {
                     return;
                 }
                 const challengesJson = await challengesResponse.json();
-                console.log(challengesJson)
-                const completedChallengesJson = challengesJson.filter((challenge: Challenge) =>
-                    challenge.challenge_submissions.some(submission => submission.status === 'success')
-                );
-                const uncompletedChallengesJson = challengesJson.filter((challenge: Challenge) =>
-                    challenge.challenge_submissions.every(submission => submission.status !== 'success')
-                );
-                setCompletedChallenges(completedChallengesJson);
-                setUncompletedChallenges(uncompletedChallengesJson);
+                console.log(challengesJson);
+                setChallenges(challengesJson);
             } catch (error) {
                 console.error('Error fetching challenges:', error);
             }

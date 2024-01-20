@@ -5,41 +5,37 @@ import Challenge from "../models/Challenge";
 import { useEffect, useRef, useState } from "react";
 import ChallengeSubmission from "../models/ChallengeSubmission";
 import LoadingButton from "../components/LoadingButton";
+import Spinner from "../components/Spinner";
 
 
 const ChallengeDetails = () => {
   let { challengeId } = useParams();
 
   const [isUploading, setUploading] = useState<boolean>(false);
+  const [isLoading, setLoading] = useState<boolean>(true);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
+  const [submissions, setChallengeSubmissions] = useState<ChallengeSubmission[]>([]);
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchChallenge = async () => {
       try {
-        const response = await fetch(`/api/challenges/${challengeId}`, { method: 'GET' });
-        const challengeJson = await response.json();
+        const challengeResponse = await fetch(`/api/challenges/${challengeId}`, { method: 'GET' });
+        const challengeJson = await challengeResponse.json();
+        const submissionsResponse = await fetch(`/api/challenge-submission/${challengeId}/`, { method: 'GET' });
+        const submissionsJson = await submissionsResponse.json();
         setChallenge(challengeJson);
-        console.log(challengeJson);
+        setChallengeSubmissions(submissionsJson);
       } catch (error) {
         console.error('Error fetching item:', error);
       }
-      //setLoading(false);
+      setLoading(false);
     };
     fetchChallenge();
   }, [challengeId]);
 
   const addSubmission = (newSubmission: ChallengeSubmission) => {
-    setChallenge(prevChallenge => {
-      if (prevChallenge) {
-        return {
-          ...prevChallenge,
-          challenge_submissions: [...prevChallenge.challenge_submissions, newSubmission]
-        };
-      } else {
-        return prevChallenge;
-      }
-    });
+    setChallengeSubmissions([...submissions, newSubmission]);
   }
 
   const handleUpload = async () => {
@@ -79,16 +75,17 @@ const ChallengeDetails = () => {
   }
 
   const renderSubmissions = () => {
-    if (!challenge) {
-      return <></>
-    }
-    return challenge.challenge_submissions.map(submission =>
+    return submissions.map(submission =>
       <ChallengeSubmissionStatus key={submission.id} submission={submission}></ChallengeSubmissionStatus>
     );
   }
 
+  if (isLoading) {
+    return (<Spinner className="text-primary size-24"></Spinner>)
+  }
+
   if (!challenge) {
-    return <></>
+    return <h1>Error</h1>
   }
 
   return (

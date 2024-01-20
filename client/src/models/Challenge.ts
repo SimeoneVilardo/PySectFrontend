@@ -1,5 +1,3 @@
-import ChallengeSubmission from "./ChallengeSubmission";
-
 interface Challenge {
     id: number;
     name: string;
@@ -10,7 +8,7 @@ interface Challenge {
     output_sample: string;
     memory_limit: number;
     time_limit: number;
-    challenge_submissions: ChallengeSubmission[];
+    is_completed: boolean;
 }
 
 export default Challenge;

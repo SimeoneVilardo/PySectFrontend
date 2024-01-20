@@ -6,12 +6,12 @@ export default defineConfig({
   server: {
     proxy: {
       "/api/notification": {
-        target: "http://localhost:9003",
+        target: "http://127.0.0.1:9003",
         changeOrigin: true,
         secure: false,
       },
       "/api": {
-        target: "http://localhost:9000",
+        target: "http://127.0.0.1:9000",
         changeOrigin: true,
         secure: false,
       },

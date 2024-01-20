@@ -7,7 +7,6 @@ const ChallengeDetails = lazy(() => import('./pages/ChallengeDetails'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 import { createContext } from 'react';
 import AuthContextType from './contexts/AuthContextType';
-import { themeChange } from 'theme-change'
 import User from './models/User';
 import PrivateRoutes from './pages/PrivateRoutes';
 import PublicRoutes from './pages/PublicRoutes';
@@ -19,10 +18,6 @@ export const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
-
-  useEffect(() => {
-    themeChange(false)
-  }, [])
 
   useEffect(() => {
     const checkLoginState = async () => {
