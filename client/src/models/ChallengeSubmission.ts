@@ -4,7 +4,7 @@ interface ChallengeSubmission {
     update_date: string;
     error: string;
     output: string;
-    status: 'running' | 'broken' | 'not_ready' | 'ready' | 'success' | 'failure';
+    status: 'running' | 'broken' | 'ready' | 'success' | 'failure';
     src_data: string;
 }
 
