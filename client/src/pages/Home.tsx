@@ -1,18 +1,19 @@
-import { useState, useEffect } from 'react';
-import Challenge from '../models/Challenge';
-import '../styles/home.css'
-import { Link } from 'react-router-dom';
-import Spinner from '../components/Spinner';
+import { useEffect, useState } from "react";
+import ChallengeHomeCard from "../components/ChallengeHomeCard"
+import Challenge from "../models/Challenge";
 
 const Home = () => {
+
     const [completedChallenges, setCompletedChallenges] = useState<Challenge[]>([]);
     const [uncompletedChallenges, setUncompletedChallenges] = useState<Challenge[]>([]);
-    const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        console.log("set body class");
-        document.body.setAttribute('class', 'home-body');
-    }, []);
+    const renderCompletedChallenges = completedChallenges.map(c =>
+        <ChallengeHomeCard key={c.id} challenge={c}></ChallengeHomeCard>
+    );
+
+    const renderUncompletedChallenges = uncompletedChallenges.map(c =>
+        <ChallengeHomeCard key={c.id} challenge={c}></ChallengeHomeCard>
+    );
 
     useEffect(() => {
         const fetchChallenges = async () => {
@@ -24,6 +25,7 @@ const Home = () => {
                     return;
                 }
                 const challengesJson = await challengesResponse.json();
+                console.log(challengesJson)
                 const completedChallengesJson = challengesJson.filter((challenge: Challenge) =>
                     challenge.challenge_submissions.some(submission => submission.status === 'success')
                 );
@@ -35,48 +37,25 @@ const Home = () => {
             } catch (error) {
                 console.error('Error fetching challenges:', error);
             }
-            setLoading(false);
+            //setLoading(false);
         };
 
         // Call the fetchItems function when the component mounts
         fetchChallenges();
     }, []);
 
-    if (loading) {
-        return (<Spinner />)
-    }
-
     return (
-        <div className="home-container">
-            <h1>New Challenges</h1>
-            <div className="ag-courses_box">
-                {uncompletedChallenges.map((challenge) => (
-                    <div key={challenge.id} className="ag-courses_item">
-                        <Link to={`/challenge/${challenge.id}`} className="ag-courses-item_link">
-                            <div className="ag-courses-item_bg ag-courses-item_bg-uncompleted"></div>
-                            <div className="ag-courses-item_title">
-                                {challenge.name}
-                            </div>
-                        </Link>
-                    </div>
-                ))}
+        <>
+            <div className="flex flex-wrap justify-center my-4 gap-4">
+                <h1 className="text-4xl">New Challenges</h1>
             </div>
-
-            <h1>Completed Challenges</h1>
-            <div className="ag-courses_box">
-                {completedChallenges.map((challenge) => (
-                    <div key={challenge.id} className="ag-courses_item">
-                        <Link to={`/challenge/${challenge.id}`} className="ag-courses-item_link">
-                            <div className="ag-courses-item_bg ag-courses-item_bg-completed"></div>
-                            <div className="ag-courses-item_title">
-                                {challenge.name}
-                            </div>
-                        </Link>
-                    </div>
-                ))}
+            <div className="flex flex-wrap justify-center my-4 gap-4">
+                {renderUncompletedChallenges}
             </div>
-
-        </div>
+            <div className="flex flex-wrap justify-center my-4 gap-4">
+                {renderCompletedChallenges}
+            </div>
+        </>
     )
 }
 

@@ -10,7 +10,6 @@ import AuthContextType from './contexts/AuthContextType';
 import User from './models/User';
 import PrivateRoutes from './pages/PrivateRoutes';
 import PublicRoutes from './pages/PublicRoutes';
-import Spinner from './components/Spinner';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -21,10 +20,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check login state here
-    // This code will run only once after the initial render
     const checkLoginState = async () => {
-      // Replace this with your actual login state checking code
       const userResponse = await fetch('/api/me/', { method: 'GET' });
       if (!userResponse.ok) {
         setLoading(false);
@@ -37,9 +33,8 @@ function App() {
 
     checkLoginState();
   }, [])
-
   if (loading) {
-    return (<Spinner />)
+    return (<></>)
   }
 
   return (

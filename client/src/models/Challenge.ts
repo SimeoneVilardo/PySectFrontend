@@ -3,6 +3,7 @@ import ChallengeSubmission from "./ChallengeSubmission";
 interface Challenge {
     id: number;
     name: string;
+    subtitle: string;
     description: string;
     points: number;
     input_sample: string;
