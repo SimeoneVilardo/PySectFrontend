@@ -1,4 +1,4 @@
-interface ChallengeSubmission {
+interface Submission {
     id: number;
     creation_date: string;
     update_date: string;
@@ -8,4 +8,4 @@ interface ChallengeSubmission {
     src_data: string;
 }
 
-export default ChallengeSubmission;
+export default Submission;

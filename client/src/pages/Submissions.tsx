@@ -1,20 +1,20 @@
 import { useParams } from "react-router-dom";
 import ChallengeDetailCard from "../components/ChallengeDetailCard"
-import ChallengeSubmissionStatus from "../components/ChallengeSubmissionStatus"
+import SubmissionStatus from "../components/ChallengeSubmissionStatus"
 import Challenge from "../models/Challenge";
 import { useEffect, useRef, useState } from "react";
-import ChallengeSubmission from "../models/ChallengeSubmission";
+import Submission from "../models/Submission";
 import LoadingButton from "../components/LoadingButton";
 import Spinner from "../components/Spinner";
 
 
-const ChallengeDetails = () => {
+const Submissions = () => {
   let { challengeId } = useParams();
 
   const [isUploading, setUploading] = useState<boolean>(false);
   const [isLoading, setLoading] = useState<boolean>(true);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
-  const [submissions, setChallengeSubmissions] = useState<ChallengeSubmission[]>([]);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -22,10 +22,12 @@ const ChallengeDetails = () => {
       try {
         const challengeResponse = await fetch(`/api/challenges/${challengeId}`, { method: 'GET' });
         const challengeJson = await challengeResponse.json();
-        const submissionsResponse = await fetch(`/api/challenge-submission?sort=-creation_date`, { method: 'GET' });
+        const submissionsResponse = await fetch(`/api/challenges/${challengeId}/submissions?sort=-creation_date`, { method: 'GET' });
         const submissionsJson = await submissionsResponse.json();
+        console.log("challengeJson", challengeJson);
+        console.log("submissionsJson", submissionsJson);
         setChallenge(challengeJson);
-        setChallengeSubmissions(submissionsJson);
+        setSubmissions(submissionsJson);
       } catch (error) {
         console.error('Error fetching item:', error);
       }
@@ -34,8 +36,8 @@ const ChallengeDetails = () => {
     fetchChallenge();
   }, [challengeId]);
 
-  const addSubmission = (newSubmission: ChallengeSubmission) => {
-    setChallengeSubmissions([...submissions, newSubmission]);
+  const addSubmission = (newSubmission: Submission) => {
+    setSubmissions([...submissions, newSubmission]);
   }
 
   const handleUpload = async () => {
@@ -52,14 +54,14 @@ const ChallengeDetails = () => {
     formData.append('file', submissionFile);
     const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken'));
     const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
-    const newChallengeSubmissionResponse = await fetch(`/api/challenge-submission/${challengeId}/`, {
+    const submissionResponse = await fetch(`/api/challenges/${challengeId}/submissions/`, {
       method: 'POST', body: formData, headers: {
         'X-CSRFToken': csrfToken
       }
     });
-    if (!newChallengeSubmissionResponse.ok) {
-      if (newChallengeSubmissionResponse.status >= 400 && newChallengeSubmissionResponse.status < 500) {
-        const newChallengeSubmissionError = await newChallengeSubmissionResponse.json();
+    if (!submissionResponse.ok) {
+      if (submissionResponse.status >= 400 && submissionResponse.status < 500) {
+        const newChallengeSubmissionError = await submissionResponse.json();
         console.log(newChallengeSubmissionError);
         //toast.error(newChallengeSubmissionError.error, { theme: "colored", position: "bottom-center" });
       }
@@ -69,14 +71,14 @@ const ChallengeDetails = () => {
       setUploading(false);
       return;
     }
-    const newChallengeSubmission = await newChallengeSubmissionResponse.json();
+    const newChallengeSubmission = await submissionResponse.json();
     addSubmission(newChallengeSubmission);
     setUploading(false);
   }
 
   const renderSubmissions = () => {
     return submissions.map(submission =>
-      <ChallengeSubmissionStatus key={submission.id} submission={submission}></ChallengeSubmissionStatus>
+      <SubmissionStatus key={submission.id} submission={submission}></SubmissionStatus>
     );
   }
 
@@ -107,4 +109,4 @@ const ChallengeDetails = () => {
   )
 }
 
-export default ChallengeDetails
+export default Submissions

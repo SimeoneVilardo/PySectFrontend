@@ -1,14 +1,14 @@
-import ChallengeSubmission from "../models/ChallengeSubmission";
+import Submission from "../models/Submission";
 import { useState } from "react";
 
-interface ChallengeSubmissionProps {
-    submission: ChallengeSubmission;
+interface SubmissionProps {
+    submission: Submission;
 }
 
 
-const ChallengeSubmissionStatus = ({ submission }: ChallengeSubmissionProps) => {
+const SubmissionStatus = ({ submission }: SubmissionProps) => {
 
-    const [currentSubmission, setCurrentSubmission] = useState<ChallengeSubmission | null>(submission);
+    const [currentSubmission, setCurrentSubmission] = useState<Submission | null>(submission);
     const statusColorMap = {
         "ready": "alert-info",
         "running": "alert-warning",
@@ -43,7 +43,7 @@ const ChallengeSubmissionStatus = ({ submission }: ChallengeSubmissionProps) => 
         try {
             const csrfCookie = document.cookie.split('; ').find(row => row.startsWith('csrftoken'));
             const csrfToken = csrfCookie ? csrfCookie.split('=')[1] : '';
-            const runChallengeSubmissionResponse = await fetch(`/api/challenge-submission/${currentSubmission.id}/run/`, {
+            const runChallengeSubmissionResponse = await fetch(`/api/challenges/submission/${currentSubmission.id}/run/`, {
                 method: 'PATCH', headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrfToken,
@@ -56,7 +56,7 @@ const ChallengeSubmissionStatus = ({ submission }: ChallengeSubmissionProps) => 
         }
     }
 
-    const updateSubmission = (updatedSubmission: ChallengeSubmission) => {
+    const updateSubmission = (updatedSubmission: Submission) => {
         setCurrentSubmission(updatedSubmission);
     }
 
@@ -84,4 +84,4 @@ const ChallengeSubmissionStatus = ({ submission }: ChallengeSubmissionProps) => 
     )
 }
 
-export default ChallengeSubmissionStatus
+export default SubmissionStatus

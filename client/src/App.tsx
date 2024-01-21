@@ -3,7 +3,7 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import Navbar from './components/NavBar';
 const Home = lazy(() => import('./pages/Home'))
 const Login = lazy(() => import('./pages/Login'))
-const ChallengeDetails = lazy(() => import('./pages/ChallengeDetails'))
+const Submissions = lazy(() => import('./pages/Submissions'))
 const NotFound = lazy(() => import('./pages/NotFound'))
 import { createContext } from 'react';
 import AuthContextType from './contexts/AuthContextType';
@@ -42,7 +42,7 @@ function App() {
           </Route>
           <Route element={<PrivateRoutes />}>
             <Route path="/" element={<Home />} />
-            <Route path="/challenge/:challengeId" element={<ChallengeDetails />} />
+            <Route path="/challenge/:challengeId" element={<Submissions />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
