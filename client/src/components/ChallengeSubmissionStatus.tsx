@@ -118,7 +118,7 @@ const SubmissionStatus = ({ submission }: SubmissionProps) => {
         .find((row) => row.startsWith("csrftoken"));
       const csrfToken = csrfCookie ? csrfCookie.split("=")[1] : "";
       const runChallengeSubmissionResponse = await fetch(
-        `/api/challenges/submission/${currentSubmission.id}/run/`,
+        `/api/challenges/submissions/${currentSubmission.id}/run/`,
         {
           method: "PATCH",
           headers: {
@@ -138,7 +138,7 @@ const SubmissionStatus = ({ submission }: SubmissionProps) => {
   const updateSubmission = (updatedSubmission: Submission) => {
     setCurrentSubmission(updatedSubmission);
   };
-  
+
 
   if (!currentSubmission?.id) {
     return <></>;
