@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import Submission from "../models/Submission";
 import LoadingButton from "../components/LoadingButton";
 import Spinner from "../components/Spinner";
+import Pagination from "../models/Pagination";
 
 
 const Submissions = () => {
@@ -15,6 +16,7 @@ const Submissions = () => {
   const [isLoading, setLoading] = useState<boolean>(true);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
+  //const [pageNumber, setPageNumber] = useState<Number>(1);
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -22,12 +24,12 @@ const Submissions = () => {
       try {
         const challengeResponse = await fetch(`/api/challenges/${challengeId}`, { method: 'GET' });
         const challengeJson = await challengeResponse.json();
-        const submissionsResponse = await fetch(`/api/challenges/${challengeId}/submissions?sort=-creation_date`, { method: 'GET' });
-        const submissionsJson = await submissionsResponse.json();
+        const submissionsResponse = await fetch(`/api/challenges/${challengeId}/submissions?sort=-creation_date&page=1`, { method: 'GET' });
+        const submissionsJson: Pagination<Submission> = await submissionsResponse.json();
         console.log("challengeJson", challengeJson);
         console.log("submissionsJson", submissionsJson);
         setChallenge(challengeJson);
-        setSubmissions(submissionsJson);
+        setSubmissions(submissionsJson.results);
       } catch (error) {
         console.error('Error fetching item:', error);
       }
