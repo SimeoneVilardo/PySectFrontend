@@ -17,6 +17,7 @@ const Submissions = () => {
   const [isLoading, setLoading] = useState<boolean>(true);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
+  console.log("RELOAD");
   //const [pageNumber, setPageNumber] = useState<Number>(1);
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -27,12 +28,12 @@ const Submissions = () => {
     // attaching a handler to receive message events
     eventSource.onmessage = async (event) => {
       console.log(event.data);
-      const challengeSubmissionResponse = await fetch(`/api/challenges/submissions/${event.data}/`, {
+      const challengeSubmissionResponse = await fetch(`/api/challenges/${challengeId}/submissions/${event.data}/`, {
         method: 'GET'
       });
       const updatedChallengeSubmission = await challengeSubmissionResponse.json();
       console.log(updatedChallengeSubmission);
-      updateSubmission(updatedChallengeSubmission);
+      addOrUpdateSubmission(updatedChallengeSubmission);
     };
 
     // terminating the connection on component unmount
@@ -54,21 +55,8 @@ const Submissions = () => {
       setLoading(false);
     };
     fetchChallenge();
-  }, [challengeId]);
+  }, [challengeId, isUploading]);
 
-  const updateSubmission = (newSubmission: Submission) => {
-    const updatedSubmissions = submissions.map(submission => {
-      if (submission.id === newSubmission.id) {
-        return newSubmission;
-      }
-      return submission;
-    });
-    setSubmissions(updatedSubmissions);
-  }
-
-  const addSubmission = (newSubmission: Submission) => {
-    setSubmissions([...submissions, newSubmission]);
-  }
 
   const handleUpload = async () => {
     if (fileInput.current && fileInput?.current?.files?.length && fileInput?.current?.files?.length > 0) {
@@ -77,6 +65,20 @@ const Submissions = () => {
     }
   };
 
+  const addOrUpdateSubmission = (newSubmission: Submission) => {
+    setSubmissions((prevSubmissions) => {
+      const existingSubmissionIndex = prevSubmissions.findIndex(submission => submission.id === newSubmission.id);
+      if (existingSubmissionIndex !== -1) {
+        // Update existing submission
+        const newSubmissions = [...prevSubmissions];
+        newSubmissions[existingSubmissionIndex] = newSubmission;
+        return newSubmissions;
+      } else {
+        // Add new submission
+        return [newSubmission, ...prevSubmissions];
+      }
+    });
+  }
 
   const uploadSubmissionFile = async (submissionFile: File) => {
     setUploading(true);
@@ -100,8 +102,7 @@ const Submissions = () => {
       setUploading(false);
       return;
     }
-    const newChallengeSubmission = await submissionResponse.json();
-    addSubmission(newChallengeSubmission);
+    await submissionResponse.json();
     setUploading(false);
   }
 

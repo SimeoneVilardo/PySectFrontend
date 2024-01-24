@@ -5,7 +5,7 @@ COPY client/package*.json ./
 
 # ---- Dependencies ----
 FROM base AS dependencies
-RUN npm ci
+RUN npm i
 
 # ---- Copy Files/Build ----
 FROM dependencies AS build

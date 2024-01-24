@@ -1,14 +1,11 @@
 import Submission from "../models/Submission";
-import { useState } from "react";
 
 interface SubmissionProps {
   submission: Submission;
 }
 
 const SubmissionStatus = ({ submission }: SubmissionProps) => {
-  const [currentSubmission, setCurrentSubmission] = useState<Submission | null>(
-    submission
-  );
+
   const statusColorMap = {
     ready: "alert-info",
     running: "alert-warning",
@@ -95,10 +92,10 @@ const SubmissionStatus = ({ submission }: SubmissionProps) => {
   };
 
   const downloadPythonFile = () => {
-    if (!currentSubmission?.src_data) {
+    if (!submission?.src_data) {
       return;
     }
-    const blob = new Blob([currentSubmission.src_data], {
+    const blob = new Blob([submission.src_data], {
       type: "text/x-python",
     });
     const url = URL.createObjectURL(blob);
@@ -109,7 +106,7 @@ const SubmissionStatus = ({ submission }: SubmissionProps) => {
   };
 
   const runChallengeSubmission = async () => {
-    if (!currentSubmission?.id) {
+    if (!submission?.id) {
       return;
     }
     try {
@@ -118,7 +115,7 @@ const SubmissionStatus = ({ submission }: SubmissionProps) => {
         .find((row) => row.startsWith("csrftoken"));
       const csrfToken = csrfCookie ? csrfCookie.split("=")[1] : "";
       const runChallengeSubmissionResponse = await fetch(
-        `/api/challenges/submissions/${currentSubmission.id}/run/`,
+        `/api/challenges/submissions/${submission.id}/run/`,
         {
           method: "PATCH",
           headers: {
@@ -127,43 +124,36 @@ const SubmissionStatus = ({ submission }: SubmissionProps) => {
           },
         }
       );
-      const runChallengeSubmission =
-        await runChallengeSubmissionResponse.json();
-      updateSubmission(runChallengeSubmission);
+      await runChallengeSubmissionResponse.json();
     } catch (error) {
       console.error("Error fetching item:", error);
     }
   };
 
-  const updateSubmission = (updatedSubmission: Submission) => {
-    setCurrentSubmission(updatedSubmission);
-  };
-
-
-  if (!currentSubmission?.id) {
+  if (!submission?.id) {
     return <></>;
   }
   return (
     <div
       role="alert"
       className={`alert ${
-        statusColorMap[currentSubmission.status]
+        statusColorMap[submission.status]
       } gap-2 my-2 content-center flex flex-row justify-between`}
     >
       <div className="flex flex-row items-center gap-4">
-        {statusIconMap[currentSubmission.status]}
+        {statusIconMap[submission.status]}
         <div className="flex flex-col">
           <p>
-            {new Date(currentSubmission.creation_date)
+            {new Date(submission.creation_date)
               .toISOString()
               .replace("T", " ")
               .substring(0, 19)}
           </p>
-          <p>Status: {currentSubmission.status.toUpperCase()}</p>
+          <p>Status: {submission.status.toUpperCase()}</p>
         </div>
       </div>
       <div className="flex flex-row gap-2 content-center">
-        {currentSubmission.status === "ready" ? (
+        {submission.status === "ready" ? (
           <button className="btn btn-sm w-20" onClick={runChallengeSubmission}>
             Run
           </button>
