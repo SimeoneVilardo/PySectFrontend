@@ -12,11 +12,15 @@ const NavBar = () => {
     const detailsRef = useRef<HTMLDetailsElement>(null);
 
     const closeThemeDropdown = () => {
-        console.log("closeThemeDropdown");
         if (detailsRef.current) {
             detailsRef.current.removeAttribute('open');
         }
     };
+
+    const handleThemeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const newTheme = e.target.value;
+        localStorage.setItem('theme', newTheme);
+    }
 
     const handleLogout = async () => {
         const logoutResponse = await fetch('/api/logout/', { method: 'POST' });
@@ -49,9 +53,9 @@ const NavBar = () => {
                         <li>
                             <a>Theme</a>
                             <ul className="p-2">
-                                <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Pink" value="valentine" /></li>
-                                <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Dark" value="business" /></li>
-                                <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Light" value="corporate" /></li>
+                                <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Pink" value="valentine" onChange={handleThemeChange} /></li>
+                                <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Dark" value="business" onChange={handleThemeChange} /></li>
+                                <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Light" value="corporate" onChange={handleThemeChange} /></li>
                             </ul>
                         </li>
                         <li>{renderUserButton()}</li>
@@ -66,9 +70,9 @@ const NavBar = () => {
                         <details ref={detailsRef}>
                             <summary>Theme</summary>
                             <ul tabIndex={0} className="dropdown-content z-[1] p-2 shadow-2xl bg-base-300 rounded-box">
-                                <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Pink" value="valentine" onClick={closeThemeDropdown} /></li>
-                                <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Dark" value="business" onClick={closeThemeDropdown} /></li>
-                                <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Light" value="corporate" onClick={closeThemeDropdown} /></li>
+                                <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Pink" value="valentine" onClick={closeThemeDropdown} onChange={handleThemeChange} /></li>
+                                <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Dark" value="business" onClick={closeThemeDropdown} onChange={handleThemeChange}/></li>
+                                <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Light" value="corporate" onClick={closeThemeDropdown} onChange={handleThemeChange} /></li>
                             </ul>
 
                         </details>

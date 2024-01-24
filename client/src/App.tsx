@@ -20,7 +20,16 @@ export const AuthContext = createContext<AuthContextType | undefined>(
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setLoading] = useState(true);
+  const [isUserLoaded, setUserLoaded] = useState(false);
+  const [isThemeLoaded, setThemeLoaded] = useState(false);
+
+  useEffect(() => {
+    const theme = localStorage.getItem('theme');
+    if (theme) {
+      document.documentElement.setAttribute('data-theme', theme);
+    }
+    setThemeLoaded(true);
+  }, []);
 
   useEffect(() => {
     const checkLoginState = async () => {
@@ -29,14 +38,18 @@ function App() {
         const userJson = await userResponse.json();
         setUser(userJson);
       }
-      setLoading(false);
+      setUserLoaded(true);
     };
 
     checkLoginState();
   }, []);
 
   const renderApp = () => {
-    if (isLoading) {
+    if (!isThemeLoaded) {
+      return <></>;
+    }
+
+    if (!isUserLoaded) {
       return <Spinner className="text-primary size-24"></Spinner>;
     }
 
