@@ -109,6 +109,14 @@ const Submissions = () => {
     );
   }
 
+  const renderUploadButton = () => {
+    if (challenge?.is_completed) {
+      return <></>
+    }
+    return <><input type="file" ref={fileInput} className="file-input file-input-bordered file-input-lg w-full" />
+      <LoadingButton isLoading={isUploading} className="btn btn-outline btn-primary btn-lg" onClick={handleUpload}>Upload</LoadingButton></>;
+  }
+
   if (isLoading) {
     return (<Spinner className="text-primary size-24"></Spinner>)
   }
@@ -126,8 +134,7 @@ const Submissions = () => {
         <div className="divider lg:divider-horizontal"></div>
         <div className="lg:w-1/2">
           <div className="flex lg:flex-row flex-col gap-2">
-            <input type="file" ref={fileInput} className="file-input file-input-bordered file-input-lg w-full" />
-            <LoadingButton isLoading={isUploading} className="btn btn-outline btn-primary btn-lg" onClick={handleUpload}>Upload</LoadingButton>
+            {renderUploadButton()}
           </div>
           {renderSubmissions()}
         </div>
