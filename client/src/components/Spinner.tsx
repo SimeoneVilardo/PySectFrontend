@@ -1,16 +1,10 @@
-import { Oval } from 'react-loader-spinner';
+const Spinner = ({ className = "" }) => {
 
-function Spinner() {
-    return (<Oval
-        visible={true}
-        height="80"
-        width="80"
-        color="#cd3e94"
-        secondaryColor='#e17fad'
-        ariaLabel="oval-loading"
-        wrapperStyle={{ position: "fixed", top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}
-        wrapperClass=""
-    />)
+    return (<div className="flex my-20">
+        <div className="m-auto">
+            <span className={`loading loading-spinner ${className}`}></span>
+        </div>
+    </div>)
 }
 
-export default Spinner;
+export default Spinner
