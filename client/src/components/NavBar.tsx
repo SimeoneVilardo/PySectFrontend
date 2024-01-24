@@ -25,7 +25,6 @@ const NavBar = () => {
     const handleLogout = async () => {
         const logoutResponse = await fetch('/api/logout/', { method: 'POST' });
         if (!logoutResponse.ok) {
-            console.log("Logout failed");
             return;
         }
         setUser(null);

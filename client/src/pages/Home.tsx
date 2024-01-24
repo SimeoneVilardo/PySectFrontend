@@ -22,11 +22,9 @@ const Home = () => {
                 // Fetch data from your API or any other source
                 const challengesResponse = await fetch('/api/challenges/', { method: 'GET' });
                 if (!challengesResponse.ok) {
-                    console.log("Error fetching challenges");
                     return;
                 }
                 const challengesJson = await challengesResponse.json();
-                console.log(challengesJson);
                 setChallenges(challengesJson);
             } catch (error) {
                 console.error('Error fetching challenges:', error);

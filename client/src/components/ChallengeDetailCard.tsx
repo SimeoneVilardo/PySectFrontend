@@ -27,10 +27,10 @@ const ChallengeDetailCard = ({ challenge }: ChallengeDetailCardProps) => {
       return (
         <div className="collapse-content">
           {sample.map((inputSampleGroup, index) => (
-            <div key={index} className="bg-base-300 my-2">
+            <div key={index} className="bg-base-300 my-2 py-2 rounded-md">
               {inputSampleGroup.map((input, innerIndex) => (
-                <pre key={innerIndex}>
-                  <code>{input}</code>
+                <pre className="overflow-x-auto" key={innerIndex}>
+                  <code className="ml-3">{input}</code>
                 </pre>
               ))}
             </div>
@@ -43,32 +43,9 @@ const ChallengeDetailCard = ({ challenge }: ChallengeDetailCardProps) => {
     }
   };
 
-
-  const renderPoints = (points: number) => {
-    const renderStars = (numberOfStars: number) => {
-      const stars = [];
-      for (let i = 1; i <= 5; i++) {
-        stars.push(
-          <input
-            key={i}
-            type="radio"
-            name={`rating-${numberOfStars}`}
-            className="mask mask-star"
-            checked={i === points}
-          />
-        );
-      }
-      return stars;
-    };
-  
-    return <div className="rating">{renderStars(1)}</div>;
-  };
-  
-
   return (
     <div className="card w-full bg-base-200 shadow-xl">
       <div className="card-body">
-        <h2 className="card-title">{challenge?.name} {renderPoints(challenge.points)}</h2>
         <p>{challenge?.description}</p>
         <div className="divider">Input & Output</div>
         <div className="card-actions justify-start">

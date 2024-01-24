@@ -12,7 +12,7 @@ const SubmissionStatus = ({ submission }: SubmissionProps) => {
   const statusColorMap = {
     ready: "alert-info",
     running: "alert-warning",
-    broken: "alert",
+    broken: "alert bg-base-300",
     success: "alert-success",
     failure: "alert-error",
   };
@@ -153,14 +153,13 @@ const SubmissionStatus = ({ submission }: SubmissionProps) => {
       <div className="flex flex-row items-center gap-4">
         {statusIconMap[currentSubmission.status]}
         <div className="flex flex-col">
-          <span>
-            Creation Date:{" "}
+          <p>
             {new Date(currentSubmission.creation_date)
               .toISOString()
               .replace("T", " ")
               .substring(0, 19)}
-          </span>
-          <span>Status: {currentSubmission.status.toUpperCase()}</span>
+          </p>
+          <p>Status: {currentSubmission.status.toUpperCase()}</p>
         </div>
       </div>
       <div className="flex flex-row gap-2 content-center">

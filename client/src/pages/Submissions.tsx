@@ -7,6 +7,7 @@ import Submission from "../models/Submission";
 import LoadingButton from "../components/LoadingButton";
 import Spinner from "../components/Spinner";
 import Pagination from "../models/Pagination";
+import { toast } from "react-toastify";
 
 
 const Submissions = () => {
@@ -20,14 +21,31 @@ const Submissions = () => {
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    // opening a connection to the server to begin receiving events from it
+    const eventSource = new EventSource('/api/notification/challenge-submission-update');
+
+    // attaching a handler to receive message events
+    eventSource.onmessage = async (event) => {
+      console.log(event.data);
+      const challengeSubmissionResponse = await fetch(`/api/challenges/submissions/${event.data}/`, {
+        method: 'GET'
+      });
+      const updatedChallengeSubmission = await challengeSubmissionResponse.json();
+      console.log(updatedChallengeSubmission);
+      updateSubmission(updatedChallengeSubmission);
+    };
+
+    // terminating the connection on component unmount
+    return () => eventSource.close();
+  }, []);
+
+  useEffect(() => {
     const fetchChallenge = async () => {
       try {
         const challengeResponse = await fetch(`/api/challenges/${challengeId}`, { method: 'GET' });
         const challengeJson = await challengeResponse.json();
         const submissionsResponse = await fetch(`/api/challenges/${challengeId}/submissions?sort=-creation_date&page=1`, { method: 'GET' });
         const submissionsJson: Pagination<Submission> = await submissionsResponse.json();
-        console.log("challengeJson", challengeJson);
-        console.log("submissionsJson", submissionsJson);
         setChallenge(challengeJson);
         setSubmissions(submissionsJson.results);
       } catch (error) {
@@ -37,6 +55,16 @@ const Submissions = () => {
     };
     fetchChallenge();
   }, [challengeId]);
+
+  const updateSubmission = (newSubmission: Submission) => {
+    const updatedSubmissions = submissions.map(submission => {
+      if (submission.id === newSubmission.id) {
+        return newSubmission;
+      }
+      return submission;
+    });
+    setSubmissions(updatedSubmissions);
+  }
 
   const addSubmission = (newSubmission: Submission) => {
     setSubmissions([...submissions, newSubmission]);
@@ -64,8 +92,7 @@ const Submissions = () => {
     if (!submissionResponse.ok) {
       if (submissionResponse.status >= 400 && submissionResponse.status < 500) {
         const newChallengeSubmissionError = await submissionResponse.json();
-        console.log(newChallengeSubmissionError);
-        //toast.error(newChallengeSubmissionError.error, { theme: "colored", position: "bottom-center" });
+        toast.error(newChallengeSubmissionError.error, { theme: "colored", position: "bottom-center" });
       }
       else {
         //toast.error("Error uploading file", { theme: "colored", position: "bottom-center" });
