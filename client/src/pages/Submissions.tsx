@@ -17,7 +17,6 @@ const Submissions = () => {
   const [isLoading, setLoading] = useState<boolean>(true);
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
-  console.log("RELOAD");
   //const [pageNumber, setPageNumber] = useState<Number>(1);
   const fileInput = useRef<HTMLInputElement>(null);
 
@@ -27,12 +26,10 @@ const Submissions = () => {
 
     // attaching a handler to receive message events
     eventSource.onmessage = async (event) => {
-      console.log(event.data);
       const challengeSubmissionResponse = await fetch(`/api/challenges/${challengeId}/submissions/${event.data}/`, {
         method: 'GET'
       });
       const updatedChallengeSubmission = await challengeSubmissionResponse.json();
-      console.log(updatedChallengeSubmission);
       addOrUpdateSubmission(updatedChallengeSubmission);
     };
 
