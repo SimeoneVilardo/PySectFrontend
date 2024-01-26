@@ -13,6 +13,7 @@ import PublicRoutes from "./pages/PublicRoutes";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Spinner from "./components/Spinner";
+import Rewards from "./pages/Rewards";
 
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
@@ -62,6 +63,7 @@ function App() {
           <Route element={<PrivateRoutes />}>
             <Route path="/" element={<Home />} />
             <Route path="/challenge/:challengeId" element={<Submissions />} />
+            <Route path="/rewards" element={<Rewards />} />
           </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>

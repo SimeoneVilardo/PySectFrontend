@@ -48,7 +48,7 @@ const NavBar = () => {
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
                     </div>
                     <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-
+                        <li><Link to="/rewards">Rewards</Link></li>
                         <li>
                             <a>Theme</a>
                             <ul className="p-2">
@@ -64,16 +64,15 @@ const NavBar = () => {
             </div>
             <div className="navbar-end hidden lg:flex">
                 <ul className="menu menu-horizontal px-1 z-[1]">
-
+                    <li><Link to="/rewards">Rewards</Link></li>
                     <li>
                         <details ref={detailsRef}>
                             <summary>Theme</summary>
                             <ul tabIndex={0} className="dropdown-content z-[1] p-2 shadow-2xl bg-base-300 rounded-box">
                                 <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Pink" value="valentine" onClick={closeThemeDropdown} onChange={handleThemeChange} /></li>
-                                <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Dark" value="business" onClick={closeThemeDropdown} onChange={handleThemeChange}/></li>
+                                <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Dark" value="business" onClick={closeThemeDropdown} onChange={handleThemeChange} /></li>
                                 <li><input type="radio" name="theme-dropdown" className="theme-controller btn btn-sm btn-block btn-ghost justify-start" aria-label="Light" value="corporate" onClick={closeThemeDropdown} onChange={handleThemeChange} /></li>
                             </ul>
-
                         </details>
                     </li>
                     <li>{renderUserButton()}</li>
