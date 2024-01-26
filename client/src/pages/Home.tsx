@@ -44,14 +44,12 @@ const Home = () => {
     return (
         <>
             <div className="flex flex-wrap justify-center my-4 gap-4">
-                <h1 className="text-4xl">New Challenges</h1>
+            <p className="text-3xl"> New Challenges</p>
             </div>
             <div className="flex flex-wrap justify-center my-4 gap-4">
                 {renderUncompletedChallenges}
             </div>
-            <div className="flex flex-wrap justify-center mt-12 mb-4 gap-4">
-                <h1 className="text-4xl">Completed Challenges</h1>
-            </div>
+            <div className="divider text-3xl my-16 mb-8"> Completed Challenges</div>
             <div className="flex flex-wrap justify-center my-4 gap-4">
                 {renderCompletedChallenges}
             </div>
