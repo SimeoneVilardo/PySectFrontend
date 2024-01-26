@@ -49,6 +49,9 @@ const Home = () => {
             <div className="flex flex-wrap justify-center my-4 gap-4">
                 {renderUncompletedChallenges}
             </div>
+            <div className="flex flex-wrap justify-center mt-12 mb-4 gap-4">
+                <h1 className="text-4xl">Completed Challenges</h1>
+            </div>
             <div className="flex flex-wrap justify-center my-4 gap-4">
                 {renderCompletedChallenges}
             </div>
