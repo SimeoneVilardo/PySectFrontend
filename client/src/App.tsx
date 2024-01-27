@@ -14,6 +14,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Spinner from "./components/Spinner";
 import Rewards from "./pages/Rewards";
+import Info from "./pages/Info";
 
 export const AuthContext = createContext<AuthContextType | undefined>(
   undefined
@@ -57,6 +58,7 @@ function App() {
     return (
       <Suspense fallback={<Spinner className="text-primary size-24"></Spinner>}>
         <Routes>
+        <Route path="/info" element={<Info />} />
           <Route element={<PublicRoutes />}>
             <Route path="/login" element={<Login />} />
           </Route>
