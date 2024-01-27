@@ -86,9 +86,20 @@ const Rewards = () => {
     return (
         <>
             <div className="flex flex-col items-center my-5">
-                <h1 className="text-xl">Total points: {user?.total_points}</h1>
-                <h1 className="text-xl">Used points: {user?.used_points}</h1>
-                <h1 className="text-xl">Remaining points: {user?.remaining_points}</h1>
+                <div className="stats md:stats-vertical lg:stats-horizontal shadow bg-base-200">
+                    <div className="stat">
+                        <div className="stat-title">Total</div>
+                        <div className="stat-value">{user?.total_points}</div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title">Used</div>
+                        <div className="stat-value">{user?.used_points}</div>
+                    </div>
+                    <div className="stat">
+                        <div className="stat-title">Avaible</div>
+                        <div className="stat-value">{user?.remaining_points}</div>
+                    </div>
+                </div>
             </div>
             <div className="flex flex-wrap justify-center my-4 gap-4">
                 {rewards.map(r => <RewardCard key={r.id} reward={r} onRedeem={handleRedeem} isGlobalRedeeming={isGlobalRedeeming()}></RewardCard>)}

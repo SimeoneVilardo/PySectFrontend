@@ -46,9 +46,9 @@ const ChallengeDetailCard = ({ challenge }: ChallengeDetailCardProps) => {
   const renderPoints = () => {
     const stars = [];
     for (let i = 1; i <= 10; i++) {
-      stars.push(<input key={i} type="radio" name="points" className={`cursor-default animate-none bg-primary mask mask-star-2 mask-half-${i % 2 == 1 ? 1 : 2}`} checked={challenge.points*2 == i} readOnly disabled />);
+      stars.push(<input key={i} type="radio" name="points" className={`cursor-default animate-none bg-primary mask mask-star-2`} checked={challenge.points == i} readOnly disabled />);
     }
-    return <div className="card-actions justify-start mt-2 gap-1">
+    return <div className="card-actions justify-start items-center mt-2 gap-1">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         style={{ width: "24px", height: "24px" }}
@@ -60,7 +60,7 @@ const ChallengeDetailCard = ({ challenge }: ChallengeDetailCardProps) => {
         />
       </svg>
       <h2>Points:</h2>
-      <div className="rating rating-half"> {stars}</div>
+      <div className="rating rating-sm md:rating-md"> {stars}</div>
     </div>;
   }
 
