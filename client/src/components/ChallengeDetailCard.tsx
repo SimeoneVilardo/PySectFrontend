@@ -45,7 +45,7 @@ const ChallengeDetailCard = ({ challenge }: ChallengeDetailCardProps) => {
 
   const renderPoints = () => {
     const stars = [];
-    for (let i = 1; i <= 10; i = i++) {
+    for (let i = 1; i <= 10; i++) {
       stars.push(<input key={i} type="radio" name="points" className={`cursor-default animate-none bg-primary mask mask-star-2 mask-half-${i % 2 == 1 ? 1 : 2}`} checked={challenge.points*2 == i} readOnly disabled />);
     }
     return <div className="card-actions justify-start mt-2 gap-1">
