@@ -44,15 +44,18 @@ const Home = () => {
     return (
         <>
             <div className="flex flex-wrap justify-center my-4 gap-4">
-            <p className="text-3xl"> New Challenges</p>
+                <p className="text-3xl"> New Challenges</p>
             </div>
-            <div className="flex flex-wrap justify-center my-4 gap-4">
+            <div className="flex flex-wrap justify-center my-4 mx-8 gap-4">
                 {renderUncompletedChallenges}
             </div>
-            <div className="divider text-3xl my-16 mb-8"> Completed Challenges</div>
-            <div className="flex flex-wrap justify-center my-4 gap-4">
-                {renderCompletedChallenges}
-            </div>
+            {renderCompletedChallenges.length > 0 && (
+                <>
+                    <div className="divider text-3xl my-16 mb-8"> Completed Challenges</div>
+                    <div className="flex flex-wrap justify-center my-4 mx-8 gap-4">
+                        {renderCompletedChallenges}
+                    </div></>
+            )}
         </>
     )
 }
