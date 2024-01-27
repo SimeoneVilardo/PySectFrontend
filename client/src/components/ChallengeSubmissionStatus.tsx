@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Submission from "../models/Submission";
-import LoadingButton from "./LoadingButton";
 import { toast } from "react-toastify";
 
 interface SubmissionProps {
