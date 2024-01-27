@@ -1,10 +1,14 @@
+import { useState } from "react";
 import Submission from "../models/Submission";
+import LoadingButton from "./LoadingButton";
+import { toast } from "react-toastify";
 
 interface SubmissionProps {
   submission: Submission;
 }
 
 const SubmissionStatus = ({ submission }: SubmissionProps) => {
+  const [isRunning, setRunning] = useState<boolean>(false);
 
   const statusColorMap = {
     ready: "alert-info",
@@ -110,6 +114,7 @@ const SubmissionStatus = ({ submission }: SubmissionProps) => {
       return;
     }
     try {
+      setRunning(true);
       const csrfCookie = document.cookie
         .split("; ")
         .find((row) => row.startsWith("csrftoken"));
@@ -126,7 +131,11 @@ const SubmissionStatus = ({ submission }: SubmissionProps) => {
       );
       await runChallengeSubmissionResponse.json();
     } catch (error) {
-      console.error("Error fetching item:", error);
+      setRunning(false);
+      toast.error(`Error running the source code`, {
+        theme: "colored",
+        position: "bottom-center",
+      });
     }
   };
 
@@ -154,7 +163,11 @@ const SubmissionStatus = ({ submission }: SubmissionProps) => {
       </div>
       <div className="flex flex-row gap-2 content-center">
         {submission.status === "ready" ? (
-          <button className="btn btn-sm w-20" onClick={runChallengeSubmission}>
+          <button
+            className="btn btn-sm w-20"
+            onClick={runChallengeSubmission}
+            disabled={isRunning}
+          >
             Run
           </button>
         ) : null}
