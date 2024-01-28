@@ -114,27 +114,32 @@ const SubmissionStatus = ({ submission }: SubmissionProps) => {
     }
     try {
       setRunning(true);
-      const csrfCookie = document.cookie
-        .split("; ")
-        .find((row) => row.startsWith("csrftoken"));
+      const csrfCookie = document.cookie.split("; ").find((row) => row.startsWith("csrftoken"));
       const csrfToken = csrfCookie ? csrfCookie.split("=")[1] : "";
-      const runChallengeSubmissionResponse = await fetch(
-        `/api/challenges/submissions/${submission.id}/run/`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRFToken": csrfToken,
-          },
+      const runChallengeSubmissionResponse = await fetch(`/api/challenges/submissions/${submission.id}/run/`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": csrfToken,
+        },
+      });
+      if (!runChallengeSubmissionResponse.ok) {
+        if (runChallengeSubmissionResponse.status >= 400 && runChallengeSubmissionResponse.status < 500) {
+          const runChallengeSubmissionError = await runChallengeSubmissionResponse.json();
+          toast.error(runChallengeSubmissionError.detail, { theme: "colored", position: "bottom-center" });
+        } else {
+          toast.error("Error running submission", { theme: "colored", position: "bottom-center" });
         }
-      );
+        setRunning(false);
+        return;
+      }
       await runChallengeSubmissionResponse.json();
     } catch (error) {
-      setRunning(false);
-      toast.error(`Error running the source code`, {
+      toast.error(`Error running submission`, {
         theme: "colored",
         position: "bottom-center",
       });
+      setRunning(false);
     }
   };
 
@@ -144,29 +149,18 @@ const SubmissionStatus = ({ submission }: SubmissionProps) => {
   return (
     <div
       role="alert"
-      className={`alert ${
-        statusColorMap[submission.status]
-      } gap-2 my-2 content-center flex flex-row justify-between`}
+      className={`alert ${statusColorMap[submission.status]} gap-2 my-2 content-center flex flex-row justify-between`}
     >
       <div className="flex flex-row items-center gap-4">
         {statusIconMap[submission.status]}
         <div className="flex flex-col">
-          <p>
-            {new Date(submission.creation_date)
-              .toISOString()
-              .replace("T", " ")
-              .substring(0, 19)}
-          </p>
+          <p>{new Date(submission.creation_date).toISOString().replace("T", " ").substring(0, 19)}</p>
           <p>Status: {submission.status.toUpperCase()}</p>
         </div>
       </div>
       <div className="flex flex-row gap-2 content-center">
         {submission.status === "ready" ? (
-          <button
-            className="btn btn-sm w-20"
-            onClick={runChallengeSubmission}
-            disabled={isRunning}
-          >
+          <button className="btn btn-sm w-20" onClick={runChallengeSubmission} disabled={isRunning}>
             Run
           </button>
         ) : null}
