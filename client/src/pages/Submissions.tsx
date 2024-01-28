@@ -20,20 +20,24 @@ const Submissions = () => {
   //const [pageNumber, setPageNumber] = useState<Number>(1);
   const fileInput = useRef<HTMLInputElement>(null);
 
+  const onEventSourceMessage = async (event: MessageEvent) => {
+    const updatedChallengeSubmission = await fetchApi({
+      url: `/api/challenges/${challengeId}/submissions/${event.data}/`,
+    });
+    addOrUpdateSubmission(updatedChallengeSubmission);
+  };
+
   useEffect(() => {
-    // opening a connection to the server to begin receiving events from it
     const eventSource = new EventSource("/api/notification/challenge-submission-update");
-
-    // attaching a handler to receive message events
-    eventSource.onmessage = async (event) => {
-      const updatedChallengeSubmission = await fetchApi({
-        url: `/api/challenges/${challengeId}/submissions/${event.data}/`,
-      });
-      addOrUpdateSubmission(updatedChallengeSubmission);
+    eventSource.onmessage = onEventSourceMessage;
+    eventSource.onerror = () => {
+      toast.error("Error in the notifications server connection", { theme: "colored", position: "bottom-center" });
     };
-
-    // terminating the connection on component unmount
-    return () => eventSource.close();
+    return () => {
+      if (eventSource.readyState == EventSource.OPEN) {
+        eventSource.close();
+      }
+    };
   }, []);
 
   useEffect(() => {
