@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ChallengeHomeCard from "../components/ChallengeHomeCard";
 import Challenge from "../models/Challenge";
 import Spinner from "../components/Spinner";
+import { fetchApi } from "../utils/fetchApi";
 
 const Home = () => {
   const [isLoading, setLoading] = useState<boolean>(true);
@@ -18,20 +19,12 @@ const Home = () => {
   useEffect(() => {
     const fetchChallenges = async () => {
       try {
-        // Fetch data from your API or any other source
-        const challengesResponse = await fetch("/api/challenges/", { method: "GET" });
-        if (!challengesResponse.ok) {
-          return;
-        }
-        const challengesJson = await challengesResponse.json();
-        setChallenges(challengesJson);
-      } catch (error) {
-        console.error("Error fetching challenges:", error);
+        const challenges = await fetchApi({ url: "/api/challenges/", method: "GET" });
+        setChallenges(challenges);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
-
-    // Call the fetchItems function when the component mounts
     fetchChallenges();
   }, []);
 

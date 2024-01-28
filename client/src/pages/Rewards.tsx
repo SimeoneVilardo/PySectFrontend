@@ -4,6 +4,7 @@ import Spinner from "../components/Spinner";
 import RewardCard from "../components/RewardCard";
 import { toast } from "react-toastify";
 import { AuthContext } from "../App";
+import { fetchApi } from "../utils/fetchApi";
 
 const Rewards = () => {
   const authContext = useContext(AuthContext);
@@ -13,49 +14,31 @@ const Rewards = () => {
   const { setUser, user } = authContext;
   const [isLoading, setLoading] = useState<boolean>(true);
   const [rewards, setRewards] = useState<Reward[]>([]);
-  //const [isRedeeming, setRedeeming] = useState<boolean>(false);
 
   const isGlobalRedeeming = () => {
     return rewards.some((r) => r.is_redeeming);
   };
 
   const updateUser = async () => {
-    const userResponse = await fetch("/api/me/", { method: "GET" });
-    if (userResponse.ok) {
-      const userJson = await userResponse.json();
-      setUser(userJson);
-    }
+    const user = await fetchApi({ url: "/api/me/" });
+    setUser(user);
   };
 
   const redeemReward = async (reward: Reward) => {
     try {
-      const redeemResponse = await fetch(`/api/rewards/${reward.id}/redeem/`, {
-        method: "PATCH",
-      });
-      if (!redeemResponse.ok) {
-        toast.error(`Error redeeming reward ${reward.name}`, {
-          theme: "colored",
-          position: "bottom-center",
-        });
-        updateRedeemingState(reward, false);
-        return;
-      }
-      const redeemedReward: Reward = await redeemResponse.json();
+      const redeemedReward = await fetchApi({ url: `/api/rewards/${reward.id}/redeem/`, method: "PATCH" });
       await updateUser();
       await fetchRewards();
-      toast.success(
-        `Congratulations! The reward ${redeemedReward.name} has been redeemed.`,
-        { theme: "colored", position: "bottom-center" }
-      );
+      toast.success(`Congratulations! The reward ${redeemedReward.name} has been redeemed.`, {
+        theme: "colored",
+        position: "bottom-center",
+      });
     } catch (error) {
-      console.error("Error redeeming reward:", error);
+      updateRedeemingState(reward, false);
     }
   };
 
-  const updateRedeemingState = (
-    redeemingReward: Reward,
-    is_redeeming: boolean
-  ) => {
+  const updateRedeemingState = (redeemingReward: Reward, is_redeeming: boolean) => {
     const updatedRewards = rewards.map((reward) => {
       if (reward.id === redeemingReward.id) {
         return { ...reward, is_redeeming: is_redeeming };
@@ -73,16 +56,11 @@ const Rewards = () => {
   const fetchRewards = async () => {
     setLoading(true);
     try {
-      const rewardsResponse = await fetch("/api/rewards/", { method: "GET" });
-      if (!rewardsResponse.ok) {
-        return;
-      }
-      const rewardsJson = await rewardsResponse.json();
-      setRewards(rewardsJson);
-    } catch (error) {
-      console.error("Error fetching rewards:", error);
+      const rewards = await fetchApi({ url: "/api/rewards/", method: "GET" });
+      setRewards(rewards);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Submission from "../models/Submission";
 import { toast } from "react-toastify";
+import { fetchApi } from "../utils/fetchApi";
 
 interface SubmissionProps {
   submission: Submission;
@@ -112,33 +113,10 @@ const SubmissionStatus = ({ submission }: SubmissionProps) => {
     if (!submission?.id) {
       return;
     }
+    setRunning(true);
     try {
-      setRunning(true);
-      const csrfCookie = document.cookie.split("; ").find((row) => row.startsWith("csrftoken"));
-      const csrfToken = csrfCookie ? csrfCookie.split("=")[1] : "";
-      const runChallengeSubmissionResponse = await fetch(`/api/challenges/submissions/${submission.id}/run/`, {
-        method: "PATCH",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": csrfToken,
-        },
-      });
-      if (!runChallengeSubmissionResponse.ok) {
-        if (runChallengeSubmissionResponse.status >= 400 && runChallengeSubmissionResponse.status < 500) {
-          const runChallengeSubmissionError = await runChallengeSubmissionResponse.json();
-          toast.error(runChallengeSubmissionError.detail, { theme: "colored", position: "bottom-center" });
-        } else {
-          toast.error("Error running submission", { theme: "colored", position: "bottom-center" });
-        }
-        setRunning(false);
-        return;
-      }
-      await runChallengeSubmissionResponse.json();
-    } catch (error) {
-      toast.error(`Error running submission`, {
-        theme: "colored",
-        position: "bottom-center",
-      });
+      await fetchApi({ url: `/api/challenges/submissions/${submission.id}/run/`, method: "PATCH" });
+    } finally {
       setRunning(false);
     }
   };

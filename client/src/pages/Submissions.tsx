@@ -8,6 +8,7 @@ import LoadingButton from "../components/LoadingButton";
 import Spinner from "../components/Spinner";
 import Pagination from "../models/Pagination";
 import { toast } from "react-toastify";
+import { fetchApi } from "../utils/fetchApi";
 
 const Submissions = () => {
   let { challengeId } = useParams();
@@ -25,10 +26,9 @@ const Submissions = () => {
 
     // attaching a handler to receive message events
     eventSource.onmessage = async (event) => {
-      const challengeSubmissionResponse = await fetch(`/api/challenges/${challengeId}/submissions/${event.data}/`, {
-        method: "GET",
+      const updatedChallengeSubmission = await fetchApi({
+        url: `/api/challenges/${challengeId}/submissions/${event.data}/`,
       });
-      const updatedChallengeSubmission = await challengeSubmissionResponse.json();
       addOrUpdateSubmission(updatedChallengeSubmission);
     };
 
@@ -39,22 +39,18 @@ const Submissions = () => {
   useEffect(() => {
     const fetchChallenge = async () => {
       try {
-        const challengeResponse = await fetch(`/api/challenges/${challengeId}`, { method: "GET" });
-        const challengeJson = await challengeResponse.json();
-        const submissionsResponse = await fetch(
-          `/api/challenges/${challengeId}/submissions?sort=-creation_date&page=1`,
-          { method: "GET" }
-        );
-        const submissionsJson: Pagination<Submission> = await submissionsResponse.json();
-        setChallenge(challengeJson);
-        setSubmissions(submissionsJson.results);
-      } catch (error) {
-        console.error("Error fetching item:", error);
+        const challenge = await fetchApi({ url: `/api/challenges/${challengeId}/` });
+        const submissions: Pagination<Submission> = await fetchApi({
+          url: `/api/challenges/${challengeId}/submissions?sort=-creation_date&page=1`,
+        });
+        setChallenge(challenge);
+        setSubmissions(submissions.results);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
     fetchChallenge();
-  }, [challengeId, isUploading]);
+  }, [challengeId]);
 
   const handleUpload = async () => {
     if (fileInput.current && fileInput?.current?.files?.length && fileInput?.current?.files?.length > 0) {
@@ -82,27 +78,11 @@ const Submissions = () => {
     setUploading(true);
     const formData = new FormData();
     formData.append("file", submissionFile);
-    const csrfCookie = document.cookie.split("; ").find((row) => row.startsWith("csrftoken"));
-    const csrfToken = csrfCookie ? csrfCookie.split("=")[1] : "";
-    const submissionResponse = await fetch(`/api/challenges/${challengeId}/submissions/`, {
-      method: "POST",
-      body: formData,
-      headers: {
-        "X-CSRFToken": csrfToken,
-      },
-    });
-    if (!submissionResponse.ok) {
-      if (submissionResponse.status >= 400 && submissionResponse.status < 500) {
-        const newChallengeSubmissionError = await submissionResponse.json();
-        toast.error(newChallengeSubmissionError.error, { theme: "colored", position: "bottom-center" });
-      } else {
-        toast.error("Error uploading file", { theme: "colored", position: "bottom-center" });
-      }
+    try {
+      await fetchApi({ url: `/api/challenges/${challengeId}/submissions/`, method: "POST", body: formData });
+    } finally {
       setUploading(false);
-      return;
     }
-    await submissionResponse.json();
-    setUploading(false);
   };
 
   const renderSubmissions = () => {

@@ -15,10 +15,9 @@ import "react-toastify/dist/ReactToastify.css";
 import Spinner from "./components/Spinner";
 import Rewards from "./pages/Rewards";
 import Info from "./pages/Info";
+import { fetchApi } from "./utils/fetchApi";
 
-export const AuthContext = createContext<AuthContextType | undefined>(
-  undefined
-);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -26,21 +25,23 @@ function App() {
   const [isThemeLoaded, setThemeLoaded] = useState(false);
 
   useEffect(() => {
-    const theme = localStorage.getItem('theme');
+    const theme = localStorage.getItem("theme");
     if (theme) {
-      document.documentElement.setAttribute('data-theme', theme);
+      document.documentElement.setAttribute("data-theme", theme);
     }
     setThemeLoaded(true);
   }, []);
 
   useEffect(() => {
     const checkLoginState = async () => {
-      const userResponse = await fetch("/api/me/", { method: "GET" });
-      if (userResponse.ok) {
-        const userJson = await userResponse.json();
-        setUser(userJson);
+      try {
+        const user = await fetchApi({ url: "/api/me", method: "GET", hasShowErrorToast: false });
+        setUser(user);
+      } catch (error) {
+        setUser(null);
+      } finally {
+        setUserLoaded(true);
       }
-      setUserLoaded(true);
     };
 
     checkLoginState();
@@ -58,7 +59,7 @@ function App() {
     return (
       <Suspense fallback={<Spinner className="text-primary size-24"></Spinner>}>
         <Routes>
-        <Route path="/info" element={<Info />} />
+          <Route path="/info" element={<Info />} />
           <Route element={<PublicRoutes />}>
             <Route path="/login" element={<Login />} />
           </Route>
