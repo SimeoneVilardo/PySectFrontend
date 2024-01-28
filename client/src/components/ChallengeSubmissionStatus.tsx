@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Submission from "../models/Submission";
-import { toast } from "react-toastify";
 import { fetchApi } from "../utils/fetchApi";
 
 interface SubmissionProps {

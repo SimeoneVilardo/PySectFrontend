@@ -1,7 +1,6 @@
 import { useState, useContext, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../App";
-import { toast } from "react-toastify";
 import LoadingButton from "../components/LoadingButton";
 import { fetchApi } from "../utils/fetchApi";
 
@@ -16,14 +15,22 @@ const Login = () => {
   }
   const { setUser } = authContext;
 
-  const handleLogin = async (event: FormEvent) => {
-    setLoading(true);
-    event.preventDefault();
+  const loginUser = async (username: string, password: string) => {
     const loginBody = { username, password };
+    await fetchApi({ url: "/api/login/", method: "POST", body: loginBody });
+  };
+
+  const fetchUser = async () => {
+    const user = await fetchApi({ url: "/api/me", method: "GET" });
+    setUser(user);
+  };
+
+  const handleLogin = async (event: FormEvent) => {
+    event.preventDefault();
+    setLoading(true);
     try {
-      await fetchApi({ url: "/api/login/", method: "POST", body: loginBody });
-      const user = await fetchApi({ url: "/api/me", method: "GET" });
-      setUser(user);
+      await loginUser(username, password);
+      await fetchUser();
       navigate("/");
     } finally {
       setLoading(false);

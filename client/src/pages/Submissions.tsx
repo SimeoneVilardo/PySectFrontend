@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import ChallengeDetailCard from "../components/ChallengeDetailCard";
 import SubmissionStatus from "../components/ChallengeSubmissionStatus";
 import Challenge from "../models/Challenge";
@@ -18,6 +18,7 @@ const Submissions = () => {
   const [challenge, setChallenge] = useState<Challenge | null>(null);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   //const [pageNumber, setPageNumber] = useState<Number>(1);
+  const navigate = useNavigate();
   const fileInput = useRef<HTMLInputElement>(null);
 
   const onEventSourceMessage = async (event: MessageEvent) => {
@@ -25,6 +26,12 @@ const Submissions = () => {
       url: `/api/challenges/${challengeId}/submissions/${event.data}/`,
     });
     addOrUpdateSubmission(updatedChallengeSubmission);
+  };
+
+  const fetchSubmissions = async () => {
+    return await fetchApi({
+      url: `/api/challenges/${challengeId}/submissions?sort=-creation_date&page=1`,
+    });
   };
 
   useEffect(() => {
@@ -44,9 +51,7 @@ const Submissions = () => {
     const fetchChallenge = async () => {
       try {
         const challenge = await fetchApi({ url: `/api/challenges/${challengeId}/` });
-        const submissions: Pagination<Submission> = await fetchApi({
-          url: `/api/challenges/${challengeId}/submissions?sort=-creation_date&page=1`,
-        });
+        const submissions: Pagination<Submission> = await fetchSubmissions();
         setChallenge(challenge);
         setSubmissions(submissions.results);
       } finally {
@@ -57,25 +62,12 @@ const Submissions = () => {
   }, [challengeId]);
 
   const handleUpload = async () => {
-    if (fileInput.current && fileInput?.current?.files?.length && fileInput?.current?.files?.length > 0) {
-      const file = fileInput.current.files[0];
-      await uploadSubmissionFile(file);
+    const file = fileInput.current?.files?.[0];
+    if (!file) {
+      toast.error("File not found", { theme: "colored", position: "bottom-center" });
+      return;
     }
-  };
-
-  const addOrUpdateSubmission = (newSubmission: Submission) => {
-    setSubmissions((prevSubmissions) => {
-      const existingSubmissionIndex = prevSubmissions.findIndex((submission) => submission.id === newSubmission.id);
-      if (existingSubmissionIndex !== -1) {
-        // Update existing submission
-        const newSubmissions = [...prevSubmissions];
-        newSubmissions[existingSubmissionIndex] = newSubmission;
-        return newSubmissions;
-      } else {
-        // Add new submission
-        return [newSubmission, ...prevSubmissions];
-      }
-    });
+    await uploadSubmissionFile(file);
   };
 
   const uploadSubmissionFile = async (submissionFile: File) => {
@@ -89,6 +81,19 @@ const Submissions = () => {
     }
   };
 
+  const addOrUpdateSubmission = (newSubmission: Submission) => {
+    setSubmissions((prevSubmissions) => {
+      const existingSubmissionIndex = prevSubmissions.findIndex((submission) => submission.id === newSubmission.id);
+      if (existingSubmissionIndex !== -1) {
+        const newSubmissions = [...prevSubmissions];
+        newSubmissions[existingSubmissionIndex] = newSubmission;
+        return newSubmissions;
+      } else {
+        return [newSubmission, ...prevSubmissions];
+      }
+    });
+  };
+
   const renderSubmissions = () => {
     return submissions.map((submission) => (
       <SubmissionStatus key={submission.id} submission={submission}></SubmissionStatus>
@@ -96,9 +101,7 @@ const Submissions = () => {
   };
 
   const renderUploadButton = () => {
-    if (challenge?.is_completed) {
-      return <></>;
-    }
+    if (challenge?.is_completed) return null;
     return (
       <>
         <input type="file" ref={fileInput} className="file-input file-input-bordered file-input-lg w-full" />
@@ -114,7 +117,8 @@ const Submissions = () => {
   }
 
   if (!challenge) {
-    return <h1>Error</h1>;
+    navigate("/not-found");
+    return null;
   }
 
   return (

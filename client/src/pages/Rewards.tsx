@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState, useMemo } from "react";
 import Reward from "../models/Reward";
 import Spinner from "../components/Spinner";
 import RewardCard from "../components/RewardCard";
@@ -15,9 +15,7 @@ const Rewards = () => {
   const [isLoading, setLoading] = useState<boolean>(true);
   const [rewards, setRewards] = useState<Reward[]>([]);
 
-  const isGlobalRedeeming = () => {
-    return rewards.some((r) => r.is_redeeming);
-  };
+  const isGlobalRedeeming = useMemo(() => rewards.some((reward) => reward.is_redeeming), [rewards]);
 
   const updateUser = async () => {
     const user = await fetchApi({ url: "/api/me/" });
@@ -25,16 +23,26 @@ const Rewards = () => {
   };
 
   const redeemReward = async (reward: Reward) => {
+    return await fetchApi({ url: `/api/rewards/${reward.id}/redeem/`, method: "PATCH" });
+  };
+
+  const fetchRewards = async () => {
+    return await fetchApi({ url: "/api/rewards/", method: "GET" });
+  };
+
+  const handleRedeem = async (redeemingReward: Reward) => {
+    updateRedeemingState(redeemingReward, true);
     try {
-      const redeemedReward = await fetchApi({ url: `/api/rewards/${reward.id}/redeem/`, method: "PATCH" });
+      const redeemedReward = await redeemReward(redeemingReward);
       await updateUser();
-      await fetchRewards();
+      const rewards = await fetchRewards();
+      setRewards(rewards);
       toast.success(`Congratulations! The reward ${redeemedReward.name} has been redeemed.`, {
         theme: "colored",
         position: "bottom-center",
       });
     } catch (error) {
-      updateRedeemingState(reward, false);
+      updateRedeemingState(redeemingReward, false);
     }
   };
 
@@ -48,23 +56,17 @@ const Rewards = () => {
     setRewards(updatedRewards);
   };
 
-  const handleRedeem = async (redeemingReward: Reward) => {
-    updateRedeemingState(redeemingReward, true);
-    redeemReward(redeemingReward);
-  };
-
-  const fetchRewards = async () => {
-    setLoading(true);
-    try {
-      const rewards = await fetchApi({ url: "/api/rewards/", method: "GET" });
-      setRewards(rewards);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchRewards();
+    const fetchRewardsData = async () => {
+      setLoading(true);
+      try {
+        const rewards = await fetchRewards();
+        setRewards(rewards);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchRewardsData();
   }, []);
 
   if (isLoading) {
@@ -91,12 +93,7 @@ const Rewards = () => {
       </div>
       <div className="flex flex-wrap justify-center my-4 gap-4">
         {rewards.map((r) => (
-          <RewardCard
-            key={r.id}
-            reward={r}
-            onRedeem={handleRedeem}
-            isGlobalRedeeming={isGlobalRedeeming()}
-          ></RewardCard>
+          <RewardCard key={r.id} reward={r} onRedeem={handleRedeem} isGlobalRedeeming={isGlobalRedeeming}></RewardCard>
         ))}
       </div>
     </>
