@@ -2,6 +2,44 @@ import { Link, useNavigate } from "react-router-dom";
 import { useContext, useRef } from "react";
 import { AuthContext } from "../App";
 import { fetchApi } from "../utils/fetchApi";
+import User from "../models/User";
+
+const UserButton = ({ user, handleLogout }: { user: User | null; handleLogout: () => void }) => {
+  if (!user) return null;
+  return (
+    <a href="#" onClick={handleLogout}>
+      Logout {user.username}
+    </a>
+  );
+};
+
+const themes = [
+  { theme: "valentine", label: "Pink" },
+  { theme: "business", label: "Dark" },
+  { theme: "corporate", label: "Light" },
+];
+
+const ThemeItems = ({
+  handleThemeChange,
+  closeThemeDropdown,
+}: {
+  handleThemeChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  closeThemeDropdown?: () => void;
+}) => {
+  return themes.map(({ theme, label }) => (
+    <li key={theme}>
+      <input
+        type="radio"
+        name="theme-dropdown"
+        className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+        aria-label={label}
+        value={theme}
+        onClick={closeThemeDropdown}
+        onChange={handleThemeChange}
+      />
+    </li>
+  ));
+};
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -29,18 +67,6 @@ const NavBar = () => {
     navigate("/login");
   };
 
-  const renderUserButton = () => {
-    if (user) {
-      return (
-        <a href="#" onClick={handleLogout}>
-          Logout {user.username}
-        </a>
-      );
-    } else {
-      return <></>;
-    }
-  };
-
   return (
     <div className="navbar bg-primary text-primary-content">
       <div className="navbar-start">
@@ -66,39 +92,12 @@ const NavBar = () => {
             <li>
               <a>Theme</a>
               <ul className="p-2">
-                <li>
-                  <input
-                    type="radio"
-                    name="theme-dropdown"
-                    className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
-                    aria-label="Pink"
-                    value="valentine"
-                    onChange={handleThemeChange}
-                  />
-                </li>
-                <li>
-                  <input
-                    type="radio"
-                    name="theme-dropdown"
-                    className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
-                    aria-label="Dark"
-                    value="business"
-                    onChange={handleThemeChange}
-                  />
-                </li>
-                <li>
-                  <input
-                    type="radio"
-                    name="theme-dropdown"
-                    className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
-                    aria-label="Light"
-                    value="corporate"
-                    onChange={handleThemeChange}
-                  />
-                </li>
+                <ThemeItems handleThemeChange={handleThemeChange} />
               </ul>
             </li>
-            <li>{renderUserButton()}</li>
+            <li>
+              <UserButton user={user} handleLogout={handleLogout} />
+            </li>
           </ul>
         </div>
         <Link className="btn btn-ghost text-xl" to="/">
@@ -117,43 +116,13 @@ const NavBar = () => {
             <details ref={detailsRef}>
               <summary>Theme</summary>
               <ul tabIndex={0} className="dropdown-content z-[1] p-2 shadow-2xl bg-base-300 rounded-box">
-                <li>
-                  <input
-                    type="radio"
-                    name="theme-dropdown"
-                    className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
-                    aria-label="Pink"
-                    value="valentine"
-                    onClick={closeThemeDropdown}
-                    onChange={handleThemeChange}
-                  />
-                </li>
-                <li>
-                  <input
-                    type="radio"
-                    name="theme-dropdown"
-                    className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
-                    aria-label="Dark"
-                    value="business"
-                    onClick={closeThemeDropdown}
-                    onChange={handleThemeChange}
-                  />
-                </li>
-                <li>
-                  <input
-                    type="radio"
-                    name="theme-dropdown"
-                    className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
-                    aria-label="Light"
-                    value="corporate"
-                    onClick={closeThemeDropdown}
-                    onChange={handleThemeChange}
-                  />
-                </li>
+                <ThemeItems handleThemeChange={handleThemeChange} closeThemeDropdown={closeThemeDropdown} />
               </ul>
             </details>
           </li>
-          <li>{renderUserButton()}</li>
+          <li>
+            <UserButton user={user} handleLogout={handleLogout} />
+          </li>
         </ul>
       </div>
     </div>
