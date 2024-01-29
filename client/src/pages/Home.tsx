@@ -39,7 +39,7 @@ const Home = () => {
       <div className="flex flex-wrap justify-center my-4 gap-4">
         <p className="text-3xl"> New Challenges</p>
       </div>
-      <div className="flex flex-wrap justify-center my-4 mx-8 gap-4">
+      <div className="flex flex-wrap justify-center my-4 mx-8 gap-6">
         {uncompletedChallenges.map((challenge) => (
           <ChallengeHomeCard key={challenge.id} challenge={challenge}></ChallengeHomeCard>
         ))}
@@ -47,7 +47,7 @@ const Home = () => {
       {completedChallenges.length > 0 && (
         <>
           <div className="divider text-3xl my-16 mb-8"> Completed Challenges</div>
-          <div className="flex flex-wrap justify-center my-4 mx-8 gap-4">
+          <div className="flex flex-wrap justify-center my-4 mx-8 gap-6">
             {completedChallenges.map((challenge) => (
               <ChallengeHomeCard key={challenge.id} challenge={challenge}></ChallengeHomeCard>
             ))}
