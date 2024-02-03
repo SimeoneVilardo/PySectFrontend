@@ -9,6 +9,9 @@ import Spinner from "../components/Spinner";
 import Pagination from "../models/Pagination";
 import { toast } from "react-toastify";
 import { fetchApi } from "../utils/fetchApi";
+import NotificationEventSource from "../utils/NotificationEventSource";
+
+const NOTIFICATION_SERVER_ERROR_TOAST_ID = 500;
 
 const Submissions = () => {
   let { challengeId } = useParams();
@@ -21,6 +24,11 @@ const Submissions = () => {
   const navigate = useNavigate();
   const fileInput = useRef<HTMLInputElement>(null);
 
+
+  const onEventSourceOpen = async (event: Event) => {
+    console.log(event);
+  };
+
   const onEventSourceMessage = async (event: MessageEvent) => {
     const updatedChallengeSubmission = await fetchApi({
       url: `/api/challenges/${challengeId}/submissions/${event.data}/`,
@@ -28,37 +36,46 @@ const Submissions = () => {
     addOrUpdateSubmission(updatedChallengeSubmission);
   };
 
-  const fetchSubmissions = async () => {
+  const onEventSourceError = (event: Event) => {
+    console.log(event);
+    toast.error("Error in the notifications server connection", { theme: "colored", position: "bottom-center", toastId: NOTIFICATION_SERVER_ERROR_TOAST_ID});
+  };
+
+
+  useEffect(() => {
+    const notificationEventSource = NotificationEventSource.getInstance();
+    notificationEventSource.connect(onEventSourceOpen, onEventSourceMessage, onEventSourceError);
+    let intervalId = setInterval(() => {
+      notificationEventSource.connect(onEventSourceOpen, onEventSourceMessage, onEventSourceError);
+    }, 2000);
+    return () => {
+      clearInterval(intervalId);
+      notificationEventSource.disconnect();
+    };
+  }, []);
+
+  const fetchChallenge = async (): Promise<Challenge> => {
+    return await fetchApi({ url: `/api/challenges/${challengeId}/` });
+  };
+
+  const fetchSubmissions = async (): Promise<Pagination<Submission>> => {
     return await fetchApi({
       url: `/api/challenges/${challengeId}/submissions?sort=-creation_date&page=1`,
     });
   };
 
   useEffect(() => {
-    const eventSource = new EventSource("/api/notification/challenge-submission-update");
-    eventSource.onmessage = onEventSourceMessage;
-    eventSource.onerror = () => {
-      toast.error("Error in the notifications server connection", { theme: "colored", position: "bottom-center" });
-    };
-    return () => {
-      if (eventSource.readyState == EventSource.OPEN) {
-        eventSource.close();
-      }
-    };
-  }, []);
-
-  useEffect(() => {
-    const fetchChallenge = async () => {
+    const fetchChallengeAndSubmissions = async () => {
       try {
-        const challenge = await fetchApi({ url: `/api/challenges/${challengeId}/` });
-        const submissions: Pagination<Submission> = await fetchSubmissions();
+        const challenge = await fetchChallenge();
+        const submissions = await fetchSubmissions();
         setChallenge(challenge);
         setSubmissions(submissions.results);
       } finally {
         setLoading(false);
       }
     };
-    fetchChallenge();
+    fetchChallengeAndSubmissions();
   }, [challengeId]);
 
   const handleUpload = async () => {
