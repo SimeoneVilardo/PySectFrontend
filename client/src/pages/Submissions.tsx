@@ -36,8 +36,9 @@ const Submissions = () => {
 
   useEffect(() => {
     const eventSource = new EventSource("/api/notification/challenge-submission-update");
-    eventSource.onmessage = onEventSourceMessage;
+    eventSource.addEventListener("submission", onEventSourceMessage);
     eventSource.onerror = () => {
+      console.log("Connection error in notification server");
       toast.error("Error in the notifications server connection", { theme: "colored", position: "bottom-center" });
     };
     return () => {
