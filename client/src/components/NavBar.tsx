@@ -121,7 +121,7 @@ const NavBar = () => {
           <li>
             <details ref={detailsRef}>
               <summary>Theme</summary>
-              <ul tabIndex={0} className="dropdown-content z-[1] p-2 shadow-2xl bg-base-300 rounded-box">
+              <ul tabIndex={0} className="dropdown-content z-[100] p-2 shadow-2xl bg-base-300 rounded-box">
                 <ThemeItems handleThemeChange={handleThemeChange} closeThemeDropdown={closeThemeDropdown} />
               </ul>
             </details>
