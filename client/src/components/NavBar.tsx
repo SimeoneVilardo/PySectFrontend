@@ -84,6 +84,9 @@ const NavBar = () => {
           </div>
           <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
             <li>
+              <Link to="/completed-challenges">Completed Challenges</Link>
+            </li>
+            <li>
               <Link to="/rewards">Rewards</Link>
             </li>
             <li>
@@ -108,6 +111,9 @@ const NavBar = () => {
         <ul className="menu menu-horizontal px-1 z-[1]">
           <li>
             <Link to="/rewards">Rewards</Link>
+          </li>
+          <li>
+            <Link to="/completed-challenges">Completed Challenges</Link>
           </li>
           <li>
             <Link to="/info">Info</Link>

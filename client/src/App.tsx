@@ -1,7 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState } from "react";
 import Navbar from "./components/NavBar";
-const Home = lazy(() => import("./pages/Home"));
+const NewChallenges = lazy(() => import("./pages/NewChallenges"));
+const CompletedChallenges = lazy(() => import("./pages/CompletedChallenges"));
 const Login = lazy(() => import("./pages/Login"));
 const Submissions = lazy(() => import("./pages/Submissions"));
 const NotFound = lazy(() => import("./pages/NotFound"));
@@ -64,7 +65,8 @@ function App() {
             <Route path="/login" element={<Login />} />
           </Route>
           <Route element={<PrivateRoutes />}>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<NewChallenges />} />
+            <Route path="/completed-challenges" element={<CompletedChallenges />} />
             <Route path="/challenge/:challengeId" element={<Submissions />} />
             <Route path="/rewards" element={<Rewards />} />
           </Route>
