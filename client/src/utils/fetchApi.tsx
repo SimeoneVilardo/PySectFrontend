@@ -3,12 +3,16 @@ import { Id, ToastContent, ToastOptions, toast } from "react-toastify";
 interface FetchApiOptions {
   url: string;
   method?: string;
+  query?: string | string[][] | Record<string, any>;
   body?: any;
   hasShowErrorToast?: boolean;
 }
 
-export async function fetchApi({ url, method = "GET", body, hasShowErrorToast = true }: FetchApiOptions) {
+export async function fetchApi({ url, method = "GET", query, body, hasShowErrorToast = true }: FetchApiOptions) {
   let headers: any = {};
+
+  const queryString = query ? `?${new URLSearchParams(query).toString()}` : '';
+
   if (!(body instanceof FormData)) {
     headers["Content-Type"] = "application/json";
     body = JSON.stringify(body);
@@ -20,7 +24,7 @@ export async function fetchApi({ url, method = "GET", body, hasShowErrorToast = 
     headers["X-CSRFToken"] = csrfToken;
   }
 
-  const response = await fetch(url, {
+  const response = await fetch(url + queryString, {
     method: method,
     body: body,
     headers: headers,

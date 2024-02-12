@@ -30,7 +30,7 @@ const Submissions = () => {
 
   const fetchSubmissions = async () => {
     return await fetchApi({
-      url: `/api/challenges/${challengeId}/submissions?sort=-creation_date&page=1`,
+      url: `/api/challenges/${challengeId}/submissions`, query: { sort: "-creation_date", page: 1 }
     });
   };
 

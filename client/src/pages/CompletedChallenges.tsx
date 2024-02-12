@@ -6,7 +6,7 @@ import { fetchApi } from "../utils/fetchApi";
 import Pagination from "../models/Pagination";
 import Paginator from "../components/Paginator";
 
-const PAGE_SIZE = 4;
+const PAGE_SIZE = 8;
 const CompletedChallenges = () => {
   const [page, setPage] = useState<number>(1);
   const [isLoading, setLoading] = useState<boolean>(true);
@@ -18,7 +18,13 @@ const CompletedChallenges = () => {
   };
 
   const fetchChallenges = async (page: number): Promise<Pagination<Challenge>> => {
-    return await fetchApi({ url: `/api/challenges?is_completed=true&page_size=${PAGE_SIZE}&page=${page}` });
+    return await fetchApi({
+      url: `/api/challenges`, query: {
+        is_completed: true,
+        page_size: PAGE_SIZE,
+        page: page
+      }
+    });
   };
 
   useEffect(() => {
@@ -43,13 +49,13 @@ const CompletedChallenges = () => {
       {challenges.length > 0 && (
         <>
           <div className="flex flex-wrap justify-center my-4 mx-8 gap-6">
-        {challenges.map((challenge) => (
-          <ChallengeHomeCard key={challenge.id} challenge={challenge}></ChallengeHomeCard>
-        ))}
-      </div>
-      <div className="flex flex-wrap justify-center my-4 mx-8 gap-6">
-        <Paginator currentPage={page} totalPages={pageCount} onPageChange={onPageChange}></Paginator>
-      </div>
+            {challenges.map((challenge) => (
+              <ChallengeHomeCard key={challenge.id} challenge={challenge}></ChallengeHomeCard>
+            ))}
+          </div>
+          <div className="flex flex-wrap justify-center my-4 mx-8 gap-6">
+            <Paginator currentPage={page} totalPages={pageCount} onPageChange={onPageChange}></Paginator>
+          </div>
         </>
       )}
     </>
