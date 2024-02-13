@@ -11,7 +11,7 @@ const ChallengeHomeCard = ({ challenge }: ChallengeHomeCardProps) => {
       <span className="indicator-item badge badge-secondary">
         {challenge.points} ⭐
       </span>
-      <div className="card w-96 bg-primary shadow-xl">
+      <div className="card h-44 w-96 bg-primary shadow-xl">
         <div className="card-body">
           <h2 className="card-title">{challenge.name}</h2>
           <p>{challenge.subtitle}</p>
