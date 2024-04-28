@@ -2,16 +2,13 @@ version: "3.9"
 services:
 
   web-prod:
-    image: "pysect-frontend-prod"
+    image: "simeonevilardo/pysect-frontend-prod"
     container_name: pysect-frontend-prod
     platform: linux/arm64/v8
     environment:
       VIRTUAL_HOST: py.sect.letz.dev
       VIRTUAL_PATH: /
       VIRTUAL_PORT: 3000
-    build:
-      context: .
-      dockerfile: ./docker/Dockerfile
     networks:
       - nginx-reverse-proxy-net
 
