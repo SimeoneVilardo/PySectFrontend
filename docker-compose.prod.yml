@@ -4,6 +4,7 @@ services:
   web-prod:
     image: "pysect-frontend-prod"
     container_name: pysect-frontend-prod
+    platform: linux/arm64/v8
     environment:
       VIRTUAL_HOST: py.sect.letz.dev
       VIRTUAL_PATH: /
