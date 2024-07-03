@@ -9,14 +9,8 @@ interface ChallengeDetailCardProps {
   challenge: Challenge;
 }
 
-const SampleData = ({ sampleString }: { sampleString: string }) => {
-  if (!sampleString.trim()) return <div className="collapse-content">Empty sample string</div>;
-  let sample: string[][] = [[]];
-  try {
-    sample = JSON.parse(sampleString);
-  } catch (error) {
-    return <div className="collapse-content">Error parsing sample</div>;
-  }
+const SampleData = ({ sample }: { sample: string[][] }) => {
+  if (sample.length == 0) return <div className="collapse-content">Empty sample string</div>;
   if (!Array.isArray(sample) || sample.some((subArray) => !Array.isArray(subArray)))
     return <div className="collapse-content">Invalid sample format</div>;
   if (sample.every((subArray) => subArray.length < 1))
@@ -36,7 +30,7 @@ const SampleData = ({ sampleString }: { sampleString: string }) => {
   );
 };
 
-const SampleDetails = ({ title, icon, sample }: { title: string; icon: JSX.Element; sample: string }) => {
+const SampleDetails = ({ title, icon, sample }: { title: string; icon: JSX.Element; sample: string[][] }) => {
   return (
     <details className="collapse border border-base-300 bg-base-200">
       <summary className="collapse-title text-xl font-medium">
@@ -47,7 +41,7 @@ const SampleDetails = ({ title, icon, sample }: { title: string; icon: JSX.Eleme
           {title}
         </div>
       </summary>
-      <SampleData sampleString={sample} />
+      <SampleData sample={sample} />
     </details>
   );
 };

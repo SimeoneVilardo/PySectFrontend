@@ -23,7 +23,6 @@ chrome-user-data
 .vscode
 *.swp
 *.swo
-.devcontainer
 dist/
 
 packages/react-devtools-core/dist
@@ -40,3 +39,4 @@ packages/react-devtools-shell/dist
 packages/react-devtools-timeline/dist
 
 package-lock.json
+.github

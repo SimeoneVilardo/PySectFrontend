@@ -1,0 +1,15 @@
+version: "3.9"
+services:
+
+  web-local:
+    build:
+      target: base
+      context: .
+      dockerfile: ./docker/Dockerfile.local
+    container_name: pysect-frontend-local
+    networks:
+      - pysect-network
+
+networks:
+  pysect-network:
+    external: true
