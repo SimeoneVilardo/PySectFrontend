@@ -1,3 +1,4 @@
+import React from 'react';
 import Challenge from "../models/Challenge";
 import InputSampleIcon from "./icons/InputSampleIcon";
 import MemoryIcon from "./icons/MemoryIcon";
@@ -75,7 +76,14 @@ const ChallengeDetailCard = ({ challenge }: ChallengeDetailCardProps) => {
     <div className="card w-full bg-base-200 shadow-xl">
       <div className="card-body">
         <div className="divider">Introduction</div>
-        <p className="font-bold">{challenge?.description}</p>
+        <p className="font-bold">
+          {challenge?.description.split('\r\n').map((line, index) => (
+            <React.Fragment key={index}>
+              {line}
+              <br />
+            </React.Fragment>
+          ))}
+        </p>
         <ChallengePoints {...challenge} />
         <div className="divider">Input & Output</div>
         <div className="card-actions justify-start">
