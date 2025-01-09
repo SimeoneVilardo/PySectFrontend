@@ -44,6 +44,8 @@ const Info = () => {
                     print("Welcome to PySect!")
                 </code>
             </pre>
+
+            <p>Version: 1.0.0</p>
         </article>
     )
 }
